@@ -1,0 +1,77 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+!.env.example
+!apps/parser/.env.example
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# Playwright
+/test-results/
+/playwright-report/
+/e2e/.auth/
+
+# Private social collector credentials, state and chat exports
+/apps/parser/.session/
+/apps/parser/.state/
+/apps/parser/imports/
+/apps/parser/whatsapp-bridge/node_modules/
+/.session/
+/.state/
+/.railway-auto-apply-deploy/
+/.pytest_cache/
+**/__pycache__/
+*.py[cod]
+
+# Python virtualenvs, WhatsApp/Telegram session caches
+**/.venv/
+**/.wwebjs_cache/
+**/.wwebjs_auth/
+*.session
+*.session-journal
+
+# Local agent settings and archives
+.claude/
+*.zip
+
+# Internal owner notes (kept local, not published)
+/OWNER-NEXT-STEPS.md
+/PROJECT-HANDOFF.md
+/WORK-LOG.md
+/docs/migration.md

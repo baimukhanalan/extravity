@@ -1,0 +1,47 @@
+# Candidate registry only. This file is not loaded by the parser.
+# Every entry was re-checked through its public t.me landing page on 2026-10-25.
+# `subscribers` (rather than `members`) is the evidence that the source is a
+# public broadcast channel, not a private chat/group.
+# All candidates are absent from the current channels.yaml and public registry.
+generated_at: "2026-10-25T17:51:00+05:00"
+verification_method: "HTTP 200 public t.me page with tgme_page_title and subscriber count"
+production_changed: false
+candidate_count: 37
+channels:
+  - { username: "hsemun", title: "Модель ООН ВШЭ | HSEMUN-27", category: "mun", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/hsemun", current_evidence: "847 subscribers" }
+  - { username: "msumun", title: "МОДЕЛЬ ООН МГУ", category: "mun", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/msumun", current_evidence: "1 094 subscribers" }
+  - { username: "modelun_mslu", title: "Переводческая Модель ООН МГЛУ", category: "mun", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/modelun_mslu", current_evidence: "481 subscribers" }
+  - { username: "mun_community", title: "MUNCommunity", category: "mun", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/mun_community", current_evidence: "307 subscribers" }
+  - { username: "mcmun2025", title: "MC MUN", category: "mun", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/mcmun2025", current_evidence: "137 subscribers" }
+  - { username: "Ehpsa", title: "EHPSA (Ethiopian Health Profession Students Association)", category: "mun", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/Ehpsa", current_evidence: "5 068 subscribers" }
+  - { username: "hulsachannel", title: "HULSA (Haramaya University Law Students Association)", category: "mun", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/hulsachannel", current_evidence: "2 705 subscribers" }
+  - { username: "SafeLightOfficial", title: "Safe Light Initiatives", category: "mun", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/SafeLightOfficial", current_evidence: "5 878 subscribers" }
+  - { username: "UNA_ET", title: "UNA-ET HU CHAPTER", category: "mun", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/UNA_ET", current_evidence: "1 951 subscribers" }
+  - { username: "logusdebate", title: "Logus Debate Club", category: "debate", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/logusdebate", current_evidence: "186 subscribers" }
+  - { username: "IUTYU", title: "IUT Students' Union", category: "debate", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/IUTYU", current_evidence: "2 055 subscribers" }
+  - { username: "cuprtc", title: "Кубок РТК — робототехнические соревнования", category: "robotics", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/cuprtc", current_evidence: "1 565 subscribers" }
+  - { username: "eurobot_russia", title: "Евробот-Россия", category: "robotics", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/eurobot_russia", current_evidence: "2 179 subscribers" }
+  - { username: "makeblock_russia", title: "Makeblock Russia", category: "robotics", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/makeblock_russia", current_evidence: "346 subscribers" }
+  - { username: "promobot_robots", title: "Promobot", category: "robotics", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/promobot_robots", current_evidence: "2 728 subscribers" }
+  - { username: "robocode2025", title: "РобоКод-2025", category: "robotics", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/robocode2025", current_evidence: "42 subscribers" }
+  - { username: "RussianRoboticsClub", title: "НАУРР. Роботизация и роботы", category: "robotics", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/RussianRoboticsClub", current_evidence: "5 988 subscribers" }
+  - { username: "codefuture", title: "Код будущего", category: "robotics", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/codefuture", current_evidence: "6 419 subscribers" }
+  - { username: "science_shared_campus", title: "SSC", category: "science", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/science_shared_campus", current_evidence: "1 982 subscribers" }
+  - { username: "ayssjinr", title: "ОМУС ОИЯИ / AYSS JINR", category: "research", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/ayssjinr", current_evidence: "1 297 subscribers" }
+  - { username: "NeuroArcadeCompetitionchannel", title: "Neuro Arcade Competition", category: "research", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/NeuroArcadeCompetitionchannel", current_evidence: "128 subscribers" }
+  - { username: "saidtelegram_official", title: "Science Association of Indonesia", category: "research", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/saidtelegram_official", current_evidence: "1 042 subscribers" }
+  - { username: "smart_lab_news", title: "NanoBioSmartLab", category: "research", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/smart_lab_news", current_evidence: "5 805 subscribers" }
+  - { username: "usern_net", title: "USERN", category: "research", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/usern_net", current_evidence: "11 518 subscribers" }
+  - { username: "diyorbeksieltslc", title: "Diyorbek's IELTS", category: "test-prep", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/diyorbeksieltslc", current_evidence: "56 435 subscribers" }
+  - { username: "English_Grammar_IELTS_TOEFL", title: "English Grammar IELTS TOEFL", category: "test-prep", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/English_Grammar_IELTS_TOEFL", current_evidence: "273 868 subscribers" }
+  - { username: "impact_school_sources", title: "IMPACT Library", category: "test-prep", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/impact_school_sources", current_evidence: "16 953 subscribers" }
+  - { username: "Akadeemy_Community", title: "Akadeemy", category: "bootcamp", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/Akadeemy_Community", current_evidence: "11 942 subscribers" }
+  - { username: "CSEC_ASTU", title: "CSEC ASTU", category: "bootcamp", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/CSEC_ASTU", current_evidence: "5 401 subscribers" }
+  - { username: "DSR_Tashkent", title: "DSR Tashkent", category: "bootcamp", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/DSR_Tashkent", current_evidence: "990 subscribers" }
+  - { username: "just_for_student", title: "Just for STUDENTS", category: "summer", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/just_for_student", current_evidence: "1 549 subscribers" }
+  - { username: "scholarshipscorner", title: "Scholarships Corner", category: "summer", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/scholarshipscorner", current_evidence: "175 006 subscribers" }
+  - { username: "shbab_btsad_shbab", title: "شباب بتساعد شباب", category: "summer", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/shbab_btsad_shbab", current_evidence: "53 855 subscribers" }
+  - { username: "mentorshipprograms", title: "Internship Programs + Jobs + Certificates", category: "mentorship", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/mentorshipprograms", current_evidence: "227 subscribers" }
+  - { username: "unifiedmentor", title: "Unified Mentor Community", category: "mentorship", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/unifiedmentor", current_evidence: "18 474 subscribers" }
+  - { username: "SHINECYS", title: "SHINE Volunteering Opportunities", category: "volunteer", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/SHINECYS", current_evidence: "2 068 subscribers" }
+  - { username: "youthbank", title: "Heartware Youthbank", category: "social", enabled: false, trusted: false, max_posts: 40, public_url: "https://t.me/youthbank", current_evidence: "4 348 subscribers" }

@@ -1,0 +1,28 @@
+.page { padding: 18px 0 76px; color: #12263f; font-family: 'Golos Text', system-ui, sans-serif; }
+.header h1 { font-family: Prata, Georgia, serif; font-size: clamp(2.45rem, 5vw, 4rem); font-weight: 400; letter-spacing: -.055em; line-height: 1.12; overflow-wrap: anywhere; }
+.header p { max-width: 64ch; margin-top: 12px; color: #617188; font-size: 1rem; line-height: 1.6; }
+.back { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 25px; color: #40546d; font-size: .9rem; font-weight: 600; }
+.back:hover { color: #2456a0; }
+.back:focus-visible { outline: 2px solid #2456a0; outline-offset: 3px; }
+.status { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-top: 34px; padding: 21px 24px; border-color: #d7e0e5; border-radius: 10px; }
+.formWrap { margin-top: 18px; }
+.formWrap > :global(div), .invite > :global(div) { border-color: #d7e0e5; border-radius: 10px; padding: clamp(20px, 4vw, 28px); }
+.formWrap :global(label), .invite :global(label) { color: #203650; font-size: .88rem; font-weight: 650; }
+.formWrap :global(input), .formWrap :global(select), .invite :global(input), .invite :global(textarea) { min-height: 50px; border-color: #cbd5df; background: #fff; color: #12263f; font-size: .95rem; }
+.invite :global(textarea) { min-height: 110px; }
+.formWrap :global(input:focus-visible), .formWrap :global(select:focus-visible), .formWrap :global(button:focus-visible), .invite :global(input:focus-visible), .invite :global(textarea:focus-visible), .invite :global(button:focus-visible) { outline: 2px solid #2456a0; outline-offset: 3px; }
+.invite { margin-top: 32px; }
+.section { margin-top: 48px; padding-top: 28px; border-top: 1px solid #ccd6de; }
+.section h2 { display: flex; align-items: center; gap: 8px; font-family: Prata, Georgia, serif; font-size: clamp(1.5rem, 2.5vw, 2.08rem); font-weight: 400; letter-spacing: -.04em; }
+.list { margin-top: 18px; overflow: hidden; border-color: #d7e0e5; border-radius: 10px; }
+.row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; padding: 20px 22px; }
+.row > div:first-child { min-width: 0; flex: 1; }
+.row a { overflow-wrap: anywhere; }
+.row a:focus-visible, .row button:focus-visible, .row summary:focus-visible { outline: 2px solid #2456a0; outline-offset: 3px; }
+.applicationRow { padding: 20px 22px; }
+.applicationRow a:focus-visible, .applicationRow button:focus-visible, .applicationRow summary:focus-visible { outline: 2px solid #2456a0; outline-offset: 3px; }
+.interests { margin-top: 32px; border-color: #d7e0e5; border-radius: 10px; padding: 24px; }
+@keyframes lift { from { transform: translateY(12px); } to { transform: translateY(0); } }
+@supports (animation-timeline: view()) { .section { animation: lift linear both; animation-timeline: view(); animation-range: entry 0% cover 12%; } }
+@media (max-width: 600px) { .page { padding-top: 10px; } .row, .applicationRow { padding: 16px; } .row > div:last-child { width: 100%; } .formWrap :global(form > div:last-child button), .invite :global(form > div:last-child button) { width: 100%; } }
+@media (prefers-reduced-motion: reduce) { .section { animation: none; } }

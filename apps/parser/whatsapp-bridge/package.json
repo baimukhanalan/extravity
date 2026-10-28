@@ -1,0 +1,21 @@
+{
+  "name": "extravity-whatsapp-linked-device",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "pair": "node bridge.mjs pair",
+    "list": "node bridge.mjs list",
+    "collect": "node bridge.mjs collect",
+    "invite": "node bridge.mjs invite"
+  },
+  "dependencies": {
+    "js-yaml": "4.3.2",
+    "qrcode": "1.5.4",
+    "qrcode-terminal": "0.12.0",
+    "whatsapp-web.js": "1.34.7"
+  },
+  "overrides": {
+    "puppeteer": "25.12.0"
+  }
+}

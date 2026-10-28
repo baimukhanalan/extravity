@@ -1,0 +1,89 @@
+.authPage {
+  color: #12263f;
+  font-family: 'Golos Text', system-ui, sans-serif;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 44px;
+  font-family: Prata, Georgia, serif;
+  font-size: 1.55rem;
+  letter-spacing: -0.045em;
+}
+
+.heading {
+  margin-bottom: 34px;
+}
+
+.heading h1 {
+  font-family: Prata, Georgia, serif;
+  font-size: clamp(2.45rem, 3.8vw, 3.55rem);
+  font-weight: 400;
+  letter-spacing: -0.06em;
+  line-height: 1.13;
+  text-wrap: balance;
+}
+
+.heading p {
+  margin-top: 13px;
+  color: #617188;
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+
+.authPage :global(form label) {
+  color: #203650;
+  font-size: 0.88rem;
+  font-weight: 650;
+}
+
+.authPage :global(form input:not([type='hidden'])) {
+  min-height: 52px;
+  border-color: #cbd5dd;
+  border-radius: 8px;
+  background: #fff;
+  color: #12263f;
+  font-size: 1rem;
+}
+
+.authPage :global(form input:focus-visible),
+.authPage :global(form button:focus-visible),
+.authPage :global(form a:focus-visible),
+.legal :global(a:focus-visible) {
+  outline: 2px solid #2456a0;
+  outline-offset: 3px;
+}
+
+.authPage :global(form button[type='submit']) {
+  min-height: 52px;
+  margin-top: 8px;
+  background: #2456a0;
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.authPage :global(form a) { color: #2456a0; }
+
+.legal {
+  margin-top: 22px;
+  color: #617188;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.legal a { color: #2456a0; text-decoration: underline; text-underline-offset: 2px; }
+
+.demo {
+  margin-top: 22px;
+  border: 1px solid #dce3e9;
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: #f3f6f8;
+  color: #617188;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  text-align: center;
+}

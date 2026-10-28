@@ -1,0 +1,212 @@
+channels:
+  - { username: "myextrakz", title: "My Extra — Возможности для подростков", category: "forum", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "grants_scholarships", title: "grants.kz", category: "exchange", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "academixhub", title: "Academix Hub", category: "course", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "jasa_project", title: "Jasa Opportunities", category: "forum", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "qaz_it_events", title: "IT Events KZ — Code Union", category: "hackathon", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "bcedukz", title: "Beyond Curriculum", category: "course", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "girlsgofirst", title: "Girls Go FIRST", category: "robotics", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "startup_course_com", title: "Возможности — startup-course.com", category: "startup", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "techgardenalmaty", title: "Almaty Hub", category: "hackathon", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "stanbasetech", title: "Stanbase", category: "startup", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "startupchoyxona", title: "Стартап-Чайхана", category: "startup", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "alanbai_base", title: "Alan’s BASE", category: "startup", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "ForbesKaz", title: "Forbes Kazakhstan", category: "forum", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "investlyhub", title: "Investly Hub", category: "startup", enabled: false, trusted: false, max_posts: 20 }
+  - { username: "ouvrelife", title: "Martin’s life", category: "startup", enabled: false, trusted: false, max_posts: 20 }
+  - { username: "techozimiz", title: "TECHOZIMIZ", category: "hackathon", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "astana_hub", title: "Astana Hub", category: "startup", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "devs_kz", title: "Devs.kz", category: "course", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "uppertunity", title: "IT Uppertunity", category: "hackathon", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "daryn_centre", title: "Daryn", category: "olympiad", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "NISolympiads19", title: "NIS Olympiads", category: "olympiad", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "adviser_kz", title: "University Adviser", category: "exchange", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "theargument_kz", title: "The Argument", category: "debate", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "firstroboticskz", title: "FIRST Kazakhstan", category: "robotics", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "kazrobotics2020", title: "KazRobotics+", category: "robotics", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "robobalapan", title: "Robobalapan", category: "robotics", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "we_project", title: "WE Project", category: "forum", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "digitalbussinesskz", title: "Digital Business", category: "forum", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "kbtucareer", title: "KBTU Career", category: "internship", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "studygrants", title: "StudyGrants", category: "exchange", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "grantium", title: "Grantium", category: "exchange", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "studyqa", title: "StudyQA", category: "exchange", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "aieseckz", title: "AIESEC Kazakhstan", category: "exchange", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "univerguide", title: "Univerguide", category: "forum", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "smartcharitykz", title: "Smart Charity", category: "volunteer", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "volo_kz", title: "Volo KZ", category: "volunteer", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "vozhmojnosti", title: "Vozhmojnosti", category: "forum", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "Turizm_jane_sport_ministrligi", title: "Ministry of Tourism and Sport", category: "sport", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "insports_kz", title: "inSports KZ", category: "sport", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "jobkz_1", title: "JobKZ", category: "internship", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "thetechkz", title: "The Tech", category: "forum", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "fut_careerforum", title: "FUT Career Forum", category: "career", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "RussianHackers_Channel", title: "Russian Hackers", category: "hackathon", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "iqanatkzz", title: "IQanat", category: "olympiad", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "Roboland_kz", title: "Roboland.kz", category: "robotics", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "ElJastary", title: "El Jastary", category: "forum", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "qaztechnologies", title: "Qaz Technologies", category: "hackathon", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "invisionustories", title: "inVision U Stories", category: "forum", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "skillbox_kz", title: "Skillbox KZ", category: "course", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "kz_nvs", title: "KZ NVS", category: "volunteer", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "qazvolunteer", title: "QazVolunteer", category: "volunteer", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "almaty_marathon", title: "Almaty Marathon", category: "sport", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "sportilinet", title: "SportiLinet", category: "sport", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "art_konkursy", title: "Art Konkursy", category: "creative", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "career_hub_kz", title: "Career Hub KZ", category: "internship", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "devkz_jobs", title: "DevKZ Jobs", category: "internship", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "digitalbusinesskz", title: "Digital Business KZ", category: "forum", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "bluescreenkz", title: "BlueScreen", category: "forum", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "profitkazakhstan", title: "Profit.kz", category: "forum", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "digitalreal", title: "REAL DIGITAL", category: "forum", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "qazcode_tech", title: "QazCode", category: "course", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "it_bilimkz", title: "IT bilim", category: "course", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "oqu_agartu", title: "Минпросвещения РК", category: "olympiad", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "datanomika", title: "Datanomika", category: "course", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "AlmatyITCommunity", title: "Almaty IT Community", category: "hackathon", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "BigTechDream", title: "BigTechDream", category: "career", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "almatydaryny", title: "Алматы дарыны", category: "olympiad", enabled: true, trusted: false, max_posts: 20 }
+  - { username: "school_grants", title: "Гранты и конкурсы для школьников", category: "olympiad", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "olimprof", title: "Конкурсы и олимпиады для детей и школьников", category: "olympiad", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "hackathon_kz", title: "Hackathon KZ", category: "hackathon", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "cleverskz", title: "CleverS", category: "olympiad", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "ivymind", title: "IvyMind — поступление и возможности", category: "exchange", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "smart_kz", title: "Smart олимпиада", category: "olympiad", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "shareandcare", title: "Sharing is Caring", category: "volunteer", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "vsekonkursy", title: "Все конкурсы, гранты и стипендии", category: "forum", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "tuntukru", title: "Детские конкурсы Тунтук", category: "creative", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "athenalabs1", title: "zero to orbit", category: "startup", enabled: true, trusted: false, max_posts: 60 }
+  - { username: "educationpunktb", title: "Пункт Б. Профориентация", category: "career", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "sirius_courses", title: "Сириус.Курсы", category: "course", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "kids_draw", title: "Детские конкурсы", category: "creative", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "mixtapekazakhdebate", title: "Mixtape — Қазақ пікірсайысы", category: "debate", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "grantscholar", title: "Гранты и стипендии", category: "exchange", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "opportunitiesalarm", title: "Возможности для школьников", category: "forum", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "hackathons", title: "Хакатоны — Hackathon list", category: "hackathon", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "kz_it_vacancies_internships", title: "IT вакансии и стажировки Казахстан", category: "internship", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "bulaq_kz", title: "ҚазҰУ ИПК — Олимпиадалар және курстар", category: "olympiad", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "robotics_csi", title: "Робототехника CSI", category: "robotics", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "artsportedukz", title: "artsport.kz", category: "sport", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "er10_kz", title: "ER10.kz", category: "startup", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "ktzvolunteerkz", title: "KTZ Volunteers", category: "volunteer", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "nikgrants", title: "N.Grants — гранты, конкурсы и возможности", category: "career", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "siriusprogram", title: "Сириус — стажировки и программы", category: "internship", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "olimpreg", title: "Школьные конкурсы и олимпиады", category: "olympiad", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "grants_aksels_itd", title: "Гранты, акселераторы и инкубаторы", category: "startup", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "kartapostupleniya", title: "Профориентация — карта поступления", category: "career", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "mamandyk4universitet", title: "Мамандық таңдауға бағыт-бағдар", category: "career", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "mamandyktandaupro", title: "Мамандық таңдау", category: "career", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "proforientacya", title: "Профориентация", category: "career", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "launchzonehub", title: "LaunchZone", category: "course", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "Achievka_kz", title: "Achievka", category: "course", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "theverbaclub", title: "The VERBA Club", category: "course", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "python4olymp", title: "Информатика, Python и олимпиады", category: "course", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "nlogninfo", title: "NlogN", category: "course", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "nucleus_borziyon", title: "NUcleus", category: "course", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "asyl_edvibe", title: "Asyl Edvibe", category: "course", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "Lingua_Insight", title: "Lingua Insight", category: "course", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "ruszolotaya", title: "Творческие конкурсы — Русь Золотая", category: "creative", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "konkursdounou", title: "Творческие конкурсы для детей и взрослых", category: "creative", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "lhkfeed", title: "Творческие конкурсы", category: "creative", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "rumcdo_debates", title: "Пікірсайыс қозғалысы", category: "debate", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "DebatersKz", title: "Пікірсайыс Қазақстан", category: "debate", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "pfs_company", title: "PFS — обучение и спорт за рубежом", category: "exchange", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "edu_traveler", title: "EduTraveler — гранты и стипендии", category: "exchange", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "NUKUDA7", title: "Ну куда — стажировки, гранты, стипендии", category: "exchange", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "englingo", title: "Мир открыт — гранты и стипендии", category: "exchange", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "smapse", title: "SMAPSE — обучение за рубежом", category: "exchange", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "ed_world", title: "Обучение за рубежом", category: "exchange", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "studypassru", title: "Обучение за рубежом", category: "exchange", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "studkit_edu", title: "СтудКит — обучение за рубежом", category: "exchange", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "universeopps", title: "Universe Opportunities", category: "forum", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "oppbridge", title: "Opportunity Bridge", category: "forum", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "roadtouniv", title: "Road to University", category: "forum", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "edugrant_kg", title: "EDUgrant — возможности Центральной Азии", category: "forum", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "startupVGlobal", title: "Startup.vg Opportunities Global", category: "forum", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "coreteamth", title: "Coreteam Policy Institute", category: "forum", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "localimpacthackaton", title: "Local Impact Hub", category: "forum", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "kbtusite", title: "KBTU SITE", category: "forum", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "magzhanandhislife", title: "Образовательные возможности", category: "forum", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "economiclink", title: "Economics for Youth", category: "forum", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "eventsitrus", title: "IT мероприятия и хакатоны", category: "hackathon", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "A_hack2025", title: "FunCode — хакатоны и мероприятия", category: "hackathon", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "Hackathonlist", title: "Hackathon List", category: "hackathon", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "fiztexhackathon", title: "FIZTEX Hackathon", category: "hackathon", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "nu_acm_w", title: "NU ACM Women", category: "hackathon", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "nfactorial_community", title: "nFactorial Community", category: "hackathon", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "rucodefestival", title: "RuCode Festival", category: "hackathon", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "khakaton", title: "Международный хакатон", category: "hackathon", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "case_in", title: "CASE-IN", category: "hackathon", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "youngcareer", title: "Young Career Kazakhstan", category: "internship", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "it_interns", title: "IT стажировки и обучение", category: "internship", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "young_intern", title: "Young Стажёр", category: "internship", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "newdirections", title: "New Directions — вакансии и стажировки", category: "internship", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "Houseofinternships", title: "House of Internships", category: "internship", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "it_internships_kz", title: "IT Internships Kazakhstan", category: "internship", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "astanadaryny", title: "Astana Daryny", category: "olympiad", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "intellectualevents", title: "Astana Daryny Community", category: "olympiad", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "olimpiadydliyadoshkoliat", title: "Олимпиады для дошколят и школьников", category: "olympiad", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "olimpiady_vsem", title: "Анонсы олимпиад для школьников", category: "olympiad", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "olimpiady_dlia_shkolnikov", title: "Олимпиады для школьников", category: "olympiad", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "nescokz", title: "National Engineering and Science Olympiad", category: "olympiad", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "olymp_bmstu", title: "Олимпиады школьников — Шаг в будущее", category: "olympiad", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "nescochat1", title: "NESCO Community", category: "olympiad", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "allcompetiotons", title: "Все конкурсы для школьников", category: "olympiad", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "KazOpenLing", title: "Language and Science Competitions", category: "olympiad", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "kzsmartspace", title: "Kazakhstan Smart Space", category: "robotics", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "redrobotics_kz", title: "Red Robotics Kazakhstan", category: "robotics", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "kzrobotics", title: "Kazakhstan Robotics Community", category: "robotics", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "ev3lego", title: "LEGO Robotics", category: "robotics", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "swimteamvbp", title: "Детско-юношеские соревнования по плаванию", category: "sport", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "kids_sport_evp", title: "Kids Sport", category: "sport", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "alivebechannel", title: "AliveBe — спортивные соревнования", category: "sport", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "Athletex", title: "Athletex", category: "sport", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "KzBrawlStarsTournaments", title: "Kazakhstan Esports Tournaments", category: "sport", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "QazStartup", title: "QazStartup", category: "startup", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "AUBIAK", title: "Ассоциация бизнес-инкубаторов Казахстана", category: "startup", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "venture_kz", title: "Venture KZ", category: "startup", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "KBTUstartup", title: "KBTU Startup Incubator", category: "startup", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "KBTU_IT", title: "IT KBTU", category: "startup", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "westart_kz", title: "WeStart Kazakhstan", category: "startup", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "startupBishkek", title: "Startup.vg Bishkek", category: "startup", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "StartupTash", title: "Startup.vg Tashkent", category: "startup", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "VolunteersNVS", title: "Волонтеры НВС", category: "volunteer", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "unvkaz", title: "UN Volunteers Kazakhstan", category: "volunteer", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "volontery_kz", title: "Волонтёры Казахстана", category: "volunteer", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "adalvolunteerclub", title: "Adal Volunteer Club", category: "volunteer", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "profenture", title: "Profenture — стажировки и волонтёрство", category: "volunteer", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "idpieltskazakhstan", title: "IDP IELTS Kazakhstan", category: "test-prep", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "ielts_kz", title: "IELTS Kazakhstan — IDP events", category: "test-prep", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "msdc_sat", title: "Digital SAT, поступление и гранты", category: "test-prep", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "studywithme_r", title: "Study with Raissov — IELTS, NUET и SAT", category: "test-prep", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "unirizz", title: "UniRizz — IELTS и поступление за рубеж", category: "test-prep", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "ainoorsday", title: "Айнур про IELTS", category: "test-prep", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "hsemun", title: "Модель ООН ВШЭ | HSEMUN-27", category: "mun", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "msumun", title: "МОДЕЛЬ ООН МГУ", category: "mun", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "modelun_mslu", title: "Переводческая Модель ООН МГЛУ", category: "mun", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "mun_community", title: "MUNCommunity", category: "mun", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "mcmun2025", title: "MC MUN", category: "mun", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "UNA_ET", title: "UNA-ET HU CHAPTER", category: "mun", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "hulsachannel", title: "HULSA Law Competitions", category: "debate", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "cuprtc", title: "Кубок РТК", category: "robotics", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "eurobot_russia", title: "Евробот-Россия", category: "robotics", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "codefuture", title: "Код будущего", category: "robotics", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "science_shared_campus", title: "Shared Science Campus", category: "science", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "ayssjinr", title: "ОМУС ОИЯИ / AYSS JINR", category: "research", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "saidtelegram_official", title: "Science Association of Indonesia", category: "research", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "smart_lab_news", title: "NanoBioSmartLab", category: "research", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "Akadeemy_Community", title: "Akadeemy", category: "bootcamp", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "DSR_Tashkent", title: "DSR Tashkent", category: "bootcamp", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "just_for_student", title: "Just for STUDENTS", category: "summer", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "scholarshipscorner", title: "Scholarships Corner", category: "summer", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "SHINECYS", title: "SHINE Volunteering Opportunities", category: "volunteer", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "youthbank", title: "Heartware Youthbank", category: "social", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "SafeLightOfficial", title: "Safe Light Initiatives", category: "social", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "y2123", title: "Youth to Youth", category: "social", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "Vedantu_Science_Olympiad", title: "Vedantu Science Olympiad", category: "science", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "proof_academy", title: "Proof Academy", category: "science", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "engineering_pioneers", title: "Engineering Pioneers", category: "research", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "afronetnews", title: "AFROnet Student Opportunities", category: "mentorship", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "EventInAddis", title: "Event in Addis", category: "bootcamp", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "searchedoutinfo", title: "SearchedOutInfo", category: "bootcamp", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "summerstmark", title: "Summer Program at St. Mark", category: "summer", enabled: true, trusted: false, max_posts: 40 }

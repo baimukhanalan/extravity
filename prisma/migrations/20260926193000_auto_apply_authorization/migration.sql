@@ -1,0 +1,1 @@
+-- Historical ledger placeholder. The removed feature is not recreated.

@@ -1,0 +1,41 @@
+# Instagram hashtags read through the official Graph API.
+#
+# Scope, on purpose:
+#   * only public posts surfaced by ig_hashtag_search + recent_media;
+#   * only public, non-personal fields (caption, permalink, timestamp) — no
+#     usernames, no follower data;
+#   * needs IG_ACCESS_TOKEN + IG_BUSINESS_ID from a reviewed Meta app;
+#   * every caption goes to the moderation queue, never straight to the catalog.
+#   * tagged-media polling can be enabled with IG_INCLUDE_TAGGED_MEDIA=true;
+#   * carousel children are archived and attached in source order.
+#
+# Meta limits how many unique hashtags one account may query in a rolling 7-day
+# window, so keep this list short and curated.
+#
+# tag: without the leading #
+# category: fallback when the caption gives no clue
+
+hashtags:
+  # Fill in real hashtags, then set enabled: true.
+  # - { tag: "олимпиадаkz",       category: "olympiad",  enabled: false }
+  # - { tag: "хакатонказахстан",  category: "hackathon", enabled: false }
+  # - { tag: "стипендиякз",       category: "summer",    enabled: false }
+  # - { tag: "волонтёрствокз",    category: "volunteer", enabled: false }
+
+  # No token yet? The parsing runs on a bundled sample response:
+  #   python run_instagram.py --demo
+
+profiles:
+  # Partner/organizer Business or Creator profiles monitored through official
+  # Meta Business Discovery. Add only profiles that authorized monitoring or
+  # whose public opportunity announcements are in scope.
+  - { username: "myextra.kz", category: "forum", enabled: true }
+  - { username: "grants.kz", category: "forum", enabled: true }
+  - { username: "eljastary", category: "forum", enabled: true }
+  - { username: "weproject.media", category: "forum", enabled: true }
+  - { username: "thetechkz", category: "forum", enabled: true }
+  - { username: "massaget.kz", category: "forum", enabled: true }
+  - { username: "rspc_daryn", category: "olympiad", enabled: true }
+  - { username: "firstroboticskz", category: "robotics", enabled: true }
+  - { username: "kazrobotics", category: "robotics", enabled: true }
+  - { username: "qazvolunteer.kz", category: "volunteer", enabled: true }

@@ -1,0 +1,918 @@
+// Extravity — database schema
+// PostgreSQL + Prisma. Covers auth/RBAC, profiles, catalog, applications,
+// documents, portfolio, moderation, submissions, notifications, audit.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- Enums ----------
+
+enum Role {
+  STUDENT
+  PARENT
+  COUNSELOR
+  ORGANIZER
+  MODERATOR
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum VerificationStatus {
+  UNVERIFIED
+  PENDING
+  VERIFIED
+  REJECTED
+  SUSPENDED
+}
+
+enum OpportunityStatus {
+  DRAFT
+  PENDING_REVIEW
+  PUBLISHED
+  REGISTRATION_OPEN
+  DEADLINE_SOON
+  CLOSED
+  COMPLETED
+  ARCHIVED
+  REJECTED
+  SUSPICIOUS
+}
+
+enum ModerationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  NEEDS_CHANGES
+}
+
+enum Format {
+  ONLINE
+  OFFLINE
+  HYBRID
+}
+
+enum ParticipationType {
+  INDIVIDUAL
+  TEAM
+  BOTH
+}
+
+enum ApplicationStatus {
+  CONSIDERING
+  SAVED
+  PREPARING
+  DOCUMENTS_MISSING
+  READY_FOR_REVIEW
+  READY_TO_SUBMIT
+  SUBMITTED
+  INTERVIEW
+  WAITLISTED
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+  COMPLETED
+}
+
+enum OpportunityMediaKind {
+  IMAGE
+  VIDEO
+}
+
+enum OpportunityMediaProcessingState {
+  STAGED
+  READY
+  FAILED
+}
+
+enum OpportunityMediaRightsState {
+  PENDING
+  APPROVED
+  REJECTED
+  LICENSED_FALLBACK
+  SOURCE_POST
+}
+
+enum OpportunitySourceAccessScope {
+  PUBLIC
+  PRIVATE
+}
+
+enum NewsStatus {
+  PENDING_REVIEW
+  PUBLISHED
+  REJECTED
+}
+
+enum SubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  DUPLICATE
+}
+
+enum AchievementType {
+  AWARD
+  PARTICIPATION
+  PROJECT
+  VOLUNTEER
+  SPORT
+  MUN
+  DEBATE
+  COURSE
+  CERTIFICATE
+  INTERNSHIP
+  PUBLICATION
+  RESEARCH
+  LEADERSHIP
+}
+
+// ---------- Auth & profiles ----------
+
+model User {
+  id                         String    @id @default(uuid())
+  email                      String    @unique
+  passwordHash               String
+  role                       Role      @default(STUDENT)
+  locale                     String    @default("ru")
+  isActive                   Boolean   @default(true)
+  telegramChatId             String?   @unique
+  telegramLinkTokenHash      String?   @unique
+  telegramLinkTokenExpiresAt DateTime?
+  points                     Int       @default(0)
+  createdAt                  DateTime  @default(now())
+  updatedAt                  DateTime  @updatedAt
+  deletedAt                  DateTime?
+
+  studentProfile         StudentProfile?
+  organizer              Organizer?
+  saved                  SavedOpportunity[]
+  applications           Application[]
+  documents              Document[]
+  achievements           Achievement[]
+  notifications          Notification[]
+  submissions            UserSubmission[]
+  auditLogs              AuditLog[]
+  subscription           Subscription?
+  notificationPreference NotificationPreference?
+  parentLinks            ParentStudentLink[]     @relation("StudentLinks")
+  parentOfLinks          ParentStudentLink[]     @relation("ParentLinks")
+  consents               ParentConsent[]
+  aiGenerations          AiGeneration[]
+  complaints             Complaint[]
+  counselorProfile       CounselorProfile?
+  counselorLinks         CounselorStudentLink[]  @relation("CounseledStudent")
+  payments               Payment[]
+  savedSearches          SavedSearch[]
+  reviews                OpportunityReview[]
+  applicationComments    ApplicationComment[]
+  pushSubscriptions      PushSubscription[]
+  documentVersions       DocumentVersion[]
+
+  @@index([role])
+}
+
+model NotificationPreference {
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  inApp           Boolean  @default(true)
+  email           Boolean  @default(true)
+  telegram        Boolean  @default(false)
+  quietHoursStart Int? // hour 0-23
+  quietHoursEnd   Int?
+  updatedAt       DateTime @updatedAt
+}
+
+model StudentProfile {
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  firstName   String
+  lastName    String
+  firstNameEn String?
+  lastNameEn  String?
+  birthDate   DateTime?
+  country     String    @default("Kazakhstan")
+  city        String?
+  school      String?
+  grade       Int?
+  phone       String?
+
+  interests String[] @default([])
+  skills    String[] @default([])
+  goals     String[] @default([])
+
+  maxBudget          Int? // KZT; null = no limit
+  willingToTravel    Boolean  @default(false)
+  onlineOnly         Boolean  @default(false)
+  hasPassport        Boolean  @default(false)
+  preferredLanguages String[] @default([])
+
+  gpa              Float?
+  favoriteSubjects String[] @default([])
+
+  onboardingCompleted Boolean @default(false)
+  onboardingStep      Int     @default(0)
+
+  // Public portfolio (behind the portfolio_public_links flag). publicSlug is the
+  // shareable URL segment; publicPortfolio is the student's own on/off switch.
+  publicSlug      String? @unique
+  publicPortfolio Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([city])
+  @@index([grade])
+}
+
+model Organizer {
+  id                      String             @id @default(uuid())
+  userId                  String?            @unique
+  user                    User?              @relation(fields: [userId], references: [id])
+  name                    String
+  type                    String? // government, university, ngo, company, school, edtech
+  bin                     String?
+  website                 String?
+  email                   String?
+  phone                   String?
+  city                    String?
+  description             String?
+  logoUrl                 String?
+  verificationStatus      VerificationStatus @default(UNVERIFIED)
+  verificationNote        String?
+  verificationRequestedAt DateTime?
+  createdAt               DateTime           @default(now())
+  updatedAt               DateTime           @updatedAt
+
+  opportunities Opportunity[]
+
+  @@index([verificationStatus])
+}
+
+/// School counsellor / teacher who guides a group of students.
+model CounselorProfile {
+  id                      String             @id @default(uuid())
+  userId                  String             @unique
+  user                    User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName                String
+  school                  String?
+  city                    String?
+  position                String?
+  verificationStatus      VerificationStatus @default(UNVERIFIED)
+  verificationRequestedAt DateTime?
+  createdAt               DateTime           @default(now())
+  updatedAt               DateTime           @updatedAt
+
+  links CounselorStudentLink[]
+
+  @@index([verificationStatus])
+}
+
+/// Counsellor ↔ student, established by an invite the student accepts.
+model CounselorStudentLink {
+  id            String           @id @default(uuid())
+  counselorId   String
+  counselor     CounselorProfile @relation(fields: [counselorId], references: [id], onDelete: Cascade)
+  studentEmail  String
+  studentUserId String?
+  student       User?            @relation("CounseledStudent", fields: [studentUserId], references: [id], onDelete: SetNull)
+  status        String           @default("pending") // pending, active, declined, revoked
+  inviteToken   String           @unique
+  note          String?
+  createdAt     DateTime         @default(now())
+  acceptedAt    DateTime?
+
+  @@unique([counselorId, studentEmail])
+  @@index([studentUserId])
+  @@index([studentEmail])
+}
+
+// ---------- Catalog ----------
+
+model Category {
+  id        String   @id @default(uuid())
+  slug      String   @unique
+  name      String
+  nameRu    String
+  nameKz    String
+  icon      String   @default("Sparkles")
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  opportunities Opportunity[]
+}
+
+model NewsArticle {
+  id            String     @id @default(uuid())
+  sourceUrl     String     @unique
+  title         String
+  summary       String
+  topic         String
+  sourceName    String
+  publishedAt   DateTime
+  imageUrl      String?
+  imageApproved Boolean    @default(false)
+  status        NewsStatus @default(PENDING_REVIEW)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@index([status, publishedAt(sort: Desc)])
+  @@index([topic, status, publishedAt(sort: Desc)])
+}
+
+model Opportunity {
+  id               String @id @default(uuid())
+  slug             String @unique
+  title            String
+  shortDescription String
+  fullDescription  String
+
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+  subcategory String?
+  tags        String[] @default([])
+
+  organizerId       String?
+  organizer         Organizer?         @relation(fields: [organizerId], references: [id])
+  organizerName     String
+  organizerVerified VerificationStatus @default(UNVERIFIED)
+
+  sourceType     String  @default("manual") // manual, official_site, user_submission, rss...
+  sourceUrl      String?
+  applicationUrl String?
+
+  originalLanguage   String   @default("ru")
+  availableLanguages String[] @default(["ru"])
+
+  country String  @default("Kazakhstan")
+  region  String?
+  city    String?
+  venue   String?
+  format  Format  @default(OFFLINE)
+
+  minimumAge          Int?
+  maximumAge          Int?
+  minimumGrade        Int?
+  maximumGrade        Int?
+  allowedCitizenships String[] @default([])
+  requiredLanguages   String[] @default([])
+
+  participationType ParticipationType @default(INDIVIDUAL)
+  minimumTeamSize   Int?
+  maximumTeamSize   Int?
+
+  price                 Int     @default(0) // KZT
+  currency              String  @default("KZT")
+  financialAidAvailable Boolean @default(false)
+  scholarshipAvailable  Boolean @default(false)
+
+  applicationDeadline  DateTime?
+  registrationOpenDate DateTime?
+  eventStartDate       DateTime?
+  eventEndDate         DateTime?
+  timezone             String    @default("Asia/Almaty")
+
+  requiredDocuments       String[] @default([])
+  requirements            String[] @default([])
+  selectionProcess        String?
+  prizes                  String?
+  certificatesAvailable   Boolean  @default(false)
+  volunteerHoursAvailable Boolean  @default(false)
+
+  applicationMethod      String  @default("external") // external, internal_form, api, assisted
+  directApplySupported   Boolean @default(false)
+  assistedApplySupported Boolean @default(false)
+
+  prestigeScore    Int @default(50) // 0-100
+  difficultyScore  Int @default(50)
+  competitionScore Int @default(50)
+  trustScore       Int @default(50)
+  confidenceScore  Int @default(80)
+
+  verifiedAt    DateTime?
+  lastCheckedAt DateTime?
+
+  status           OpportunityStatus @default(PUBLISHED)
+  moderationStatus ModerationStatus  @default(APPROVED)
+  isFeatured       Boolean           @default(false)
+  isSponsored      Boolean           @default(false)
+  saveCount        Int               @default(0)
+  viewCount        Int               @default(0)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  saved        SavedOpportunity[]
+  applications Application[]
+  views        OpportunityView[]
+  reviews      OpportunityReview[]
+  media        OpportunityMedia[]
+  provenance   OpportunityProvenance?
+
+  // Denormalized outcome counters (maintained from OpportunityReview) so the
+  // catalog can rank by real success without aggregating on every query.
+  appliedCount  Int @default(0)
+  acceptedCount Int @default(0)
+
+  @@index([status])
+  @@index([categoryId])
+  @@index([city])
+  @@index([applicationDeadline])
+  @@index([format])
+}
+
+enum ReviewOutcome {
+  APPLIED
+  ACCEPTED
+  REJECTED
+  WITHDREW
+}
+
+/// A student's real outcome + optional short review. Powers social proof on the
+/// card and success-based ranking. One review per student per opportunity.
+model OpportunityReview {
+  id            String        @id @default(uuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  opportunityId String
+  opportunity   Opportunity   @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  outcome       ReviewOutcome
+  rating        Int? // 1-5, optional
+  comment       String?
+  isPublic      Boolean       @default(true)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@unique([userId, opportunityId])
+  @@index([opportunityId])
+}
+
+model OpportunityMedia {
+  id                String                          @id @default(uuid())
+  opportunityId     String
+  opportunity       Opportunity                     @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  kind              OpportunityMediaKind
+  url               String
+  posterUrl         String?
+  storageKey        String?
+  mimeType          String
+  sizeBytes         Int
+  width             Int?
+  height            Int?
+  durationMs        Int?
+  position          Int                             @default(0)
+  checksum          String
+  platformMediaId   String?
+  processingState   OpportunityMediaProcessingState @default(STAGED)
+  rightsState       OpportunityMediaRightsState     @default(PENDING)
+  rightsEvidenceRef String?
+  altText           String?
+  createdAt         DateTime                        @default(now())
+  updatedAt         DateTime                        @updatedAt
+
+  @@unique([opportunityId, platformMediaId])
+  @@index([opportunityId, position])
+  @@index([processingState, rightsState])
+}
+
+model OpportunityProvenance {
+  id            String                       @id @default(uuid())
+  opportunityId String                       @unique
+  opportunity   Opportunity                  @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  sourceUrl     String
+  sourceAccount String?
+  sourcePostId  String?
+  capturedAt    DateTime                     @default(now())
+  accessScope   OpportunitySourceAccessScope @default(PUBLIC)
+  rightsBasis   String?
+  adminOnlyJson Json                         @default("{}")
+  createdAt     DateTime                     @default(now())
+  updatedAt     DateTime                     @updatedAt
+
+  @@index([sourceAccount, sourcePostId])
+}
+
+/// A saved catalog filter. The cron matches new opportunities against it and
+/// notifies the owner. `filters` mirrors CatalogParams; lastCheckedAt bounds the
+/// "new since" window so a student isn't re-alerted about the same result.
+model SavedSearch {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name          String
+  filters       Json     @default("{}")
+  alertsEnabled Boolean  @default(true)
+  lastCheckedAt DateTime @default(now())
+  createdAt     DateTime @default(now())
+
+  @@index([userId])
+}
+
+/// A Web Push subscription (one per browser/device). Endpoint is unique so a
+/// re-subscribe upserts instead of duplicating.
+model PushSubscription {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+/// One row per opportunity per day — aggregated counter, no per-user tracking.
+model OpportunityView {
+  id            String      @id @default(uuid())
+  opportunityId String
+  opportunity   Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  day           DateTime    @db.Date
+  count         Int         @default(0)
+
+  @@unique([opportunityId, day])
+  @@index([day])
+}
+
+model SavedOpportunity {
+  id            String      @id @default(uuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  opportunityId String
+  opportunity   Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+
+  @@unique([userId, opportunityId])
+  @@index([userId])
+}
+
+// ---------- Applications ----------
+
+model Application {
+  id            String      @id @default(uuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  opportunityId String
+  opportunity   Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+
+  status    ApplicationStatus @default(PREPARING)
+  progress  Int               @default(0) // 0-100
+  checklist Json              @default("[]")
+  notes     String            @default("")
+  answers   Json              @default("[]")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  statusHistory ApplicationStatusHistory[]
+  comments      ApplicationComment[]
+
+  @@unique([userId, opportunityId])
+  @@index([userId])
+  @@index([status])
+}
+
+/// A comment on a student's application draft, left by the student, or by a
+/// linked counsellor/parent (access is checked in the server action, not here).
+model ApplicationComment {
+  id            String      @id @default(uuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  authorUserId  String
+  author        User        @relation(fields: [authorUserId], references: [id], onDelete: Cascade)
+  authorRole    String // "student" | "counselor" | "parent" — for the UI label
+  body          String
+  createdAt     DateTime    @default(now())
+
+  @@index([applicationId])
+}
+
+model ApplicationStatusHistory {
+  id            String            @id @default(uuid())
+  applicationId String
+  application   Application       @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  status        ApplicationStatus
+  note          String?
+  createdAt     DateTime          @default(now())
+}
+
+// ---------- Documents & portfolio ----------
+
+model Document {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  type      String // cv, id, passport, photo, certificate, diploma, transcript, motivation, portfolio
+  mimeType  String   @default("application/pdf")
+  sizeBytes Int      @default(0)
+  url       String? // signed URL / storage path
+  isMock    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  versions DocumentVersion[]
+
+  @@index([userId])
+}
+
+model DocumentVersion {
+  id                 String             @id @default(uuid())
+  documentId         String
+  document           Document           @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  userId             String
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  version            Int
+  storageKey         String
+  checksum           String
+  mimeType           String
+  sizeBytes          Int
+  scanStatus         String             @default("pending")
+  verificationStatus VerificationStatus @default(UNVERIFIED)
+  issuedAt           DateTime?
+  expiresAt          DateTime?
+  createdAt          DateTime           @default(now())
+
+  @@unique([documentId, version])
+  @@index([userId, verificationStatus])
+  @@index([checksum])
+}
+
+model Achievement {
+  id           String          @id @default(uuid())
+  userId       String
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title        String
+  organization String?
+  type         AchievementType @default(PARTICIPATION)
+  date         DateTime?
+  role         String?
+  description  String?
+  result       String?
+  level        String? // school, city, national, international
+  hours        Int?
+  skills       String[]        @default([])
+  link         String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@index([userId])
+}
+
+// ---------- Notifications ----------
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String // new_match, deadline_14, deadline_7, deadline_3, deadline_1, doc_missing, status_change, submission_result
+  title     String
+  body      String
+  link      String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, isRead])
+}
+
+// ---------- User submissions & moderation ----------
+
+model UserSubmission {
+  id         String           @id @default(uuid())
+  userId     String
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  url        String
+  comment    String?
+  category   String?
+  status     SubmissionStatus @default(PENDING)
+  reviewNote String?
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  @@index([status])
+}
+
+// ---------- Billing (mock) ----------
+
+model SubscriptionPlan {
+  id           String @id @default(uuid())
+  slug         String @unique // free, pro_search, apply_pro
+  name         String
+  priceKzt     Int    @default(0)
+  entitlements Json   @default("{}")
+  order        Int    @default(0)
+
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id        String           @id @default(uuid())
+  userId    String           @unique
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId    String
+  plan      SubscriptionPlan @relation(fields: [planId], references: [id])
+  status    String           @default("active") // active, cancelled, past_due
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}
+
+/// Payment attempt recorded before redirecting to the provider; the webhook settles it.
+model Payment {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planSlug    String
+  provider    String   @default("mock") // mock, halyk, kaspi, cloudpayments
+  providerRef String?  @unique
+  amountKzt   Int
+  currency    String   @default("KZT")
+  status      String   @default("pending") // pending, succeeded, failed, refunded
+  meta        Json     @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+// ---------- Platform ----------
+
+model FeatureFlag {
+  key         String   @id
+  enabled     Boolean  @default(false)
+  description String?
+  updatedAt   DateTime @updatedAt
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  action    String
+  entity    String?
+  entityId  String?
+  meta      Json     @default("{}")
+  ip        String?
+  createdAt DateTime @default(now())
+
+  @@index([action])
+  @@index([createdAt])
+}
+
+// ---------- Parser / data collection ----------
+
+model SourceConnector {
+  id           String    @id @default(uuid())
+  name         String
+  type         String // rss, sitemap, official_site, government, university, ngo...
+  url          String
+  schedule     String    @default("daily")
+  enabled      Boolean   @default(true)
+  robotsPolicy String    @default("respect")
+  rateLimitMs  Int       @default(2000)
+  lastRunAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  jobs     ParserJob[]
+  rawItems RawSourceItem[]
+
+  @@index([enabled])
+}
+
+model ParserJob {
+  id               String           @id @default(uuid())
+  connectorId      String?
+  connector        SourceConnector? @relation(fields: [connectorId], references: [id])
+  status           String           @default("queued") // queued, running, completed, partial_failure, failed
+  startedAt        DateTime?
+  finishedAt       DateTime?
+  itemsFound       Int              @default(0)
+  itemsCreated     Int              @default(0)
+  itemsUpdated     Int              @default(0)
+  itemsDuplicate   Int              @default(0)
+  itemsExpired     Int              @default(0)
+  itemsFailed      Int              @default(0)
+  itemsQuarantined Int              @default(0)
+  error            String?
+  durationMs       Int?
+  createdAt        DateTime         @default(now())
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model RawSourceItem {
+  id              String           @id @default(uuid())
+  connectorId     String?
+  connector       SourceConnector? @relation(fields: [connectorId], references: [id])
+  url             String
+  contentHash     String?
+  failureKey      String?          @unique
+  attemptCount    Int              @default(0)
+  lastAttemptAt   DateTime?
+  httpStatus      Int?
+  rawText         String?
+  extracted       Json             @default("{}")
+  processingState String           @default("fetched") // fetched, extracted, ingested, duplicate, expired, failed, quarantined
+  error           String?
+  opportunityId   String?
+  createdAt       DateTime         @default(now())
+
+  @@index([contentHash])
+  @@index([processingState])
+  @@index([connectorId, url, contentHash])
+}
+
+// ---------- Parent link & consents ----------
+
+enum ConsentType {
+  DATA_PROCESSING
+  DOCUMENT_STORAGE
+  DATA_SHARING
+  APPLICATION_SUBMIT
+}
+
+model ParentStudentLink {
+  id            String    @id @default(uuid())
+  studentUserId String
+  student       User      @relation("StudentLinks", fields: [studentUserId], references: [id], onDelete: Cascade)
+  parentEmail   String
+  parentName    String?
+  parentUserId  String?
+  parent        User?     @relation("ParentLinks", fields: [parentUserId], references: [id], onDelete: SetNull)
+  status        String    @default("pending") // pending, active, revoked
+  inviteToken   String    @unique
+  createdAt     DateTime  @default(now())
+  acceptedAt    DateTime?
+
+  consents ParentConsent[]
+
+  @@index([studentUserId])
+  @@index([parentEmail])
+  @@index([parentUserId])
+}
+
+model ParentConsent {
+  id            String            @id @default(uuid())
+  linkId        String
+  link          ParentStudentLink @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  studentUserId String
+  student       User              @relation(fields: [studentUserId], references: [id], onDelete: Cascade)
+  type          ConsentType
+  granted       Boolean           @default(false)
+  grantedAt     DateTime?
+  createdAt     DateTime          @default(now())
+
+  @@unique([linkId, type])
+  @@index([studentUserId])
+}
+
+// ---------- AI generations (section 20 & 44) ----------
+
+model AiGeneration {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applicationId String?
+  promptType    String // motivation_letter, cv_adapt, shorten, translate, checklist, interview_prep
+  inputHash     String
+  model         String   @default("mock")
+  output        String
+  version       Int      @default(1)
+  accepted      Boolean  @default(false)
+  edited        Boolean  @default(false)
+  finalText     String?
+  tokenUsage    Int      @default(0)
+  safetyStatus  String   @default("ok")
+  createdAt     DateTime @default(now())
+
+  @@index([userId])
+  @@index([applicationId])
+}
+
+// ---------- Complaints / reports (section 26) ----------
+
+model Complaint {
+  id         String   @id @default(uuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+  targetType String // opportunity, organizer, user
+  targetId   String
+  reason     String
+  details    String?
+  status     String   @default("open") // open, reviewing, resolved, dismissed
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([status])
+}

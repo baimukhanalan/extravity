@@ -1,0 +1,109 @@
+# Source connectors for the parser.
+#
+# Each source is fetched, extracted, normalized and ingested into the app's
+# moderation queue. The parser respects robots.txt and rate limits, and NEVER
+# uses public endpoints and documented access methods. Only add sources you are allowed to
+# read (official sites, RSS, sitemaps, partners).
+#
+# type: html | rss | sitemap
+# For html/sitemap the parser reads schema.org Event JSON-LD and OpenGraph.
+# organizer: default organizer name if the page doesn't provide one.
+# category: default category slug when it can't be inferred.
+
+sources:
+  - name: "Astana Hub — upcoming events"
+    type: astanahub_events
+    url: "https://astanahub.com/en/event/"
+    organizer: "Astana Hub"
+    category: "startup"
+    max_pages: 100
+    rate_limit_ms: 3000
+    enabled: true
+
+  # --- Public web monitoring sources (verified 2026-10-25) ---
+  # These connectors collect factual opportunity metadata into the pipeline.
+  # Website media stays held unless an explicit rights basis is configured.
+  - { name: "Major League Hacking", type: html, url: "https://mlh.io/seasons/2026/events", organizer: "Major League Hacking", category: "hackathon", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "Challenge.gov", type: html, url: "https://www.challenge.gov/", organizer: "Challenge.gov", category: "social", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "Blue Ocean Competition", type: html, url: "https://blueoceancompetition.org/compete/", organizer: "Blue Ocean Competition", category: "startup", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "Diamond Challenge", type: html, url: "https://diamondchallenge.org/", organizer: "Diamond Challenge", category: "social", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "International AI Startup Challenge", type: html, url: "https://www.joiniasc.org/competition", organizer: "International AI Startup Challenge", category: "startup", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "Daryn calendar", type: html, url: "https://daryn.kz/darynkz/darynkz-kalendar/darynkz.php", organizer: "РНПЦ Дарын", category: "olympiad", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "myolympiad.kz", type: html, url: "https://myolympiad.kz/olympiad/", organizer: "myolympiad.kz", category: "science", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "International Mathematical Olympiad", type: html, url: "https://www.imo-official.org/", organizer: "IMO", category: "olympiad", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "International Physics Olympiad", type: html, url: "https://www.ipho-new.org/", organizer: "IPhO", category: "science", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "International Chemistry Olympiad", type: html, url: "https://www.icho-official.org/", organizer: "IChO", category: "science", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "International Olympiad in Informatics", type: html, url: "https://ioinformatics.org/", organizer: "IOI", category: "olympiad", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "International Economics Olympiad", type: html, url: "https://ieo-official.org/", organizer: "IEO", category: "olympiad", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "SOF exam schedule", type: html, url: "https://sofworld.org/exam-schedule", organizer: "Science Olympiad Foundation", category: "olympiad", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "Bebras events", type: html, url: "https://www.bebras.org/events.html", organizer: "Bebras", category: "hackathon", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "THIMUN Foundation", type: html, url: "https://foundation.thimun.org/", organizer: "THIMUN Foundation", category: "mun", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "USTEM Competitions", type: html, url: "https://www.ustem.kz/en/competitions", organizer: "USTEM", category: "robotics", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "FIRST event search", type: html, url: "https://www.firstinspires.org/team-event-search", organizer: "FIRST", category: "robotics", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "World Robot Olympiad", type: html, url: "https://wro-association.org/competition/", organizer: "World Robot Olympiad", category: "robotics", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "RoboCupJunior events", type: html, url: "https://junior.robocup.org/events/", organizer: "RoboCupJunior", category: "robotics", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "Regeneron ISEF", type: html, url: "https://www.societyforscience.org/isef/", organizer: "Society for Science", category: "research", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "Breakthrough Junior Challenge", type: html, url: "https://breakthroughjuniorchallenge.org/", organizer: "Breakthrough Junior Challenge", category: "creative", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "GENIUS Olympiad", type: html, url: "https://geniusolympiad.org/", organizer: "GENIUS Olympiad", category: "research", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "NYAS Junior Academy", type: html, url: "https://www.nyas.org/learning/high-school-research-programs/the-junior-academy/", organizer: "New York Academy of Sciences", category: "mentorship", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "Pioneer Academics", type: html, url: "https://pioneeracademics.com/", organizer: "Pioneer Academics", category: "research", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "Polygence projects", type: html, url: "https://www.polygence.org/projects", organizer: "Polygence", category: "research", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "Harvard High School Research Conference", type: html, url: "https://www.harvardresearch.org/faqshsrc", organizer: "Harvard Undergraduate Research", category: "research", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "College Board SAT dates", type: html, url: "https://satsuite.collegeboard.org/sat/dates-deadlines", organizer: "College Board", category: "test-prep", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "IELTS test centres Kazakhstan", type: html, url: "https://ielts.org/test-centres?city=all&country=kaz", organizer: "IELTS", category: "test-prep", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "IDP IELTS Kazakhstan dates", type: html, url: "https://ielts.kz/exams-dates/", organizer: "IDP IELTS Kazakhstan", category: "test-prep", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "ETS TOEFL scheduling", type: html, url: "https://www.ets.org/toefl/test-takers/ibt/schedule.html", organizer: "ETS", category: "test-prep", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "ACT registration", type: html, url: "https://www.act.org/content/act/en/products-and-services/the-act/registration.html", organizer: "ACT", category: "test-prep", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "UNESCO Open Learning", type: html, url: "https://openlearning.unesco.org/", organizer: "UNESCO", category: "course", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "edX search", type: html, url: "https://www.edx.org/search", organizer: "edX", category: "course", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "Stepik catalogue", type: html, url: "https://stepik.org/catalog", organizer: "Stepik", category: "course", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "Girls Who Code Programs", type: html, url: "https://girlswhocode.com/programs", organizer: "Girls Who Code", category: "bootcamp", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "AI4ALL summer programs", type: html, url: "https://ai-4-all.org/summer-programs/", organizer: "AI4ALL", category: "summer", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "LaunchX Programs", type: html, url: "https://www.launchx.com/programs", organizer: "LaunchX", category: "bootcamp", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "Harvard High School Programs", type: html, url: "https://summer.harvard.edu/high-school-programs/", organizer: "Harvard Summer School", category: "summer", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "Yale Young Global Scholars", type: html, url: "https://globalscholars.yale.edu/", organizer: "Yale Young Global Scholars", category: "summer", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "Stanford Pre-Collegiate programs", type: html, url: "https://spcs.stanford.edu/programs", organizer: "Stanford Pre-Collegiate Studies", category: "summer", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "FLEX Global", type: html, url: "https://www.americancouncils.org/programs/flex-global-program", organizer: "American Councils", category: "exchange", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "European Youth Portal volunteering", type: html, url: "https://youth.europa.eu/go-abroad/volunteering_en", organizer: "European Youth Portal", category: "volunteer", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "QazVolunteer", type: html, url: "https://qazvolunteer.kz/", organizer: "QazVolunteer", category: "social", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "UN Volunteers", type: html, url: "https://app.unv.org/", organizer: "United Nations Volunteers", category: "volunteer", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "International School Sport Federation", type: html, url: "https://www.isfsports.org/sports", organizer: "ISF", category: "sport", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "Scholastic Art and Writing Awards", type: html, url: "https://www.artandwriting.org/awards/", organizer: "Alliance for Young Artists and Writers", category: "creative", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "Forage simulations", type: html, url: "https://www.theforage.com/simulations", organizer: "Forage", category: "career", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "NASA STEM Gateway", type: html, url: "https://stemgateway.nasa.gov/public/s/explore-opportunities", organizer: "NASA", category: "internship", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "CERN Beamline for Schools", type: html, url: "https://beamlineforschools.cern/", organizer: "CERN", category: "research", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "Research Girl Mentorship", type: html, url: "https://researchgirl.org/mentorships", organizer: "Research Girl", category: "mentorship", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "European Youth Forum Events", type: html, url: "https://www.youthforum.org/events", organizer: "European Youth Forum", category: "forum", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "One Young World Scholarships", type: html, url: "https://www.oneyoungworld.com/scholarships", organizer: "One Young World", category: "mentorship", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  # --- Bundled demo source (proves the pipeline end-to-end, offline-safe) ---
+  - name: "Demo — Sample KZ Opportunities"
+    type: html
+    # Served by the parser itself (server.py) at /fixtures/sample-opportunities.html.
+    # Replace with real source URLs below.
+    url: "${APP_PARSER_FIXTURE_URL:-http://localhost:8000/fixtures/sample-opportunities.html}"
+    organizer: "Demo Source"
+    category: "forum"
+    enabled: false
+
+  # --- Стартовый список реальных источников KZ (ВЫКЛЮЧЕНЫ) ---
+  # Перед включением проверьте: (1) robots.txt разрешает; (2) страница отдаёт
+  # schema.org Event (JSON-LD) или RSS; (3) у вас есть право читать источник.
+  # Включайте по одному (enabled: true) и проверяйте `python run.py --dry-run --source "..."`.
+
+  # Стартапы / хакатоны / IT
+  # - { name: "Astana Hub — events", type: html, url: "https://astanahub.com/en/event/", organizer: "Astana Hub", category: "startup", enabled: false }
+  # - { name: "nFactorial", type: html, url: "https://www.nfactorial.school/", organizer: "nFactorial", category: "bootcamp", enabled: false }
+
+  # Университеты (программы, летние школы)
+  # - { name: "Nazarbayev University — news/events", type: html, url: "https://nu.edu.kz/news", organizer: "Nazarbayev University", category: "summer", enabled: false }
+  # - { name: "SDU", type: html, url: "https://sdu.edu.kz/", organizer: "SDU", category: "course", enabled: false }
+
+  # Олимпиады / наука (гос. и профильные)
+  # - { name: "МОН/Минпросвещения РК — олимпиады", type: html, url: "https://www.gov.kz/", organizer: "Министерство просвещения РК", category: "olympiad", enabled: false }
+  # - { name: "Дарын (респ. олимпиады)", type: html, url: "https://daryn.kz/", organizer: "РНПЦ Дарын", category: "olympiad", enabled: false }
+
+  # Волонтёрство / соц. проекты / форумы
+  # - { name: "El Umiti / волонтёрство", type: html, url: "https://elumiti.kz/", organizer: "El Umiti", category: "volunteer", enabled: false }
+
+  # Пример RSS-ленты
+  # - { name: "Образовательный RSS", type: rss, url: "https://example.kz/feed.xml", organizer: "Example", category: "course", enabled: false }

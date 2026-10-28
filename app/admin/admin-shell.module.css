@@ -1,0 +1,5 @@
+.shell { display: flex; min-height: 100vh; background: var(--background); }
+.content { flex: 1; min-width: 0; overflow-x: clip; }
+.contentInner { width: min(100%, 1280px); margin-inline: auto; padding: 2rem clamp(1.25rem, 3vw, 3rem) 5rem; }
+.shell :global(aside nav) { min-height: 0; overflow-y: auto; scrollbar-width: thin; }
+@media (max-width: 1023px) { .shell { flex-direction: column; } .contentInner { padding-top: 1.5rem; } }

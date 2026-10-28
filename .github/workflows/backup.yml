@@ -1,0 +1,49 @@
+name: Nightly DB backup
+
+# Second line of defence on top of Neon's continuous PITR: a portable pg_dump
+# kept as a workflow artifact. Runs only when the DATABASE_URL secret exists, so
+# a fork without secrets doesn't fail. Add the secret as DATABASE_URL_UNPOOLED
+# (the Neon direct/unpooled connection string).
+on:
+  schedule:
+    - cron: "0 2 * * *" # 02:00 UTC daily
+  workflow_dispatch: {}
+
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Guard — secret present
+        id: guard
+        run: |
+          if [ -n "${{ secrets.DATABASE_URL_UNPOOLED }}" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "DATABASE_URL_UNPOOLED secret not set — skipping backup."
+          fi
+
+      # Match pg_dump's major version to Neon's server (currently 16).
+      - name: Install postgresql-client-16
+        if: steps.guard.outputs.ready == 'true'
+        run: |
+          sudo sh -c 'echo "deb https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+          wget -qO- https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-16
+
+      - name: Dump
+        if: steps.guard.outputs.ready == 'true'
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL_UNPOOLED }}
+        run: ./scripts/backup.sh backups
+
+      - name: Upload artifact
+        if: steps.guard.outputs.ready == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: db-backup-${{ github.run_id }}
+          path: backups/*.dump
+          retention-days: 30

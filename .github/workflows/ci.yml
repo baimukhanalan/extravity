@@ -1,0 +1,106 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# A red build must block a deploy, so every check that can run without secrets
+# runs here: type-check, lint, and both test suites. The DB is never touched —
+# unit tests are pure, and `prisma generate` only needs the schema.
+jobs:
+  web:
+    name: Web (types, lint, tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Prisma Client is generated from the schema; no database connection.
+      - run: npx prisma generate
+
+      - name: Type-check
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm test
+
+  e2e:
+    name: E2E (Playwright)
+    runs-on: ubuntu-latest
+    # A throwaway Postgres so the flows hit a real DB, seeded with demo data.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: eckz
+          POSTGRES_PASSWORD: eckz
+          POSTGRES_DB: eckz_e2e
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U eckz"
+          --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      DATABASE_URL: postgresql://eckz:eckz@localhost:5432/eckz_e2e
+      E2E_DATABASE_URL: postgresql://eckz:eckz@localhost:5432/eckz_e2e
+      AUTH_SECRET: ci-only-secret-not-used-in-production-0123456789
+      NEXT_PUBLIC_APP_URL: http://localhost:3130
+      NEXT_PUBLIC_APP_NAME: Extravity
+      SEED_DEMO: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx prisma migrate deploy
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+      - name: Run e2e
+        run: npm run e2e
+
+  parser:
+    name: Parser (Python tests)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/parser
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Tests
+        run: python -m pytest tests -q
+
+  auto-apply-stress:
+    name: Auto-apply stress foundation (synthetic)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/auto-apply-stress-foundation
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Tests
+        run: PYTHONPATH=src python -m unittest discover -s tests -v

@@ -1,0 +1,10 @@
+.venv
+.env
+.env.*
+.session
+.state
+.wwebjs_cache
+imports
+__pycache__
+.pytest_cache
+whatsapp-bridge/node_modules

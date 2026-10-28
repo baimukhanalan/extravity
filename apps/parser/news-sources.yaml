@@ -1,0 +1,48 @@
+sources:
+  - name: UNESCO Education
+    kind: unesco_education_index
+    url: https://www.unesco.org/en/education/news-stories
+    topic: education
+    allowed_article_hosts: [www.unesco.org]
+    relevance_terms: [youth, young, student, school, skills, learning, literacy, digital, artificial intelligence, ai, stem, teacher, career]
+    rate_limit_ms: 3000
+    max_items: 10
+    enabled: false
+  - name: Google Blog — AI and learning
+    url: https://blog.google/rss/
+    topic: ai
+    allowed_article_hosts: [blog.google]
+    relevance_terms: [ai, artificial intelligence, education, student, school, learning]
+    rate_limit_ms: 3000
+    max_items: 20
+    enabled: true
+  - name: MIT News — Artificial Intelligence
+    url: https://news.mit.edu/topic/mitartificial-intelligence2-rss.xml
+    topic: ai
+    allowed_article_hosts: [news.mit.edu]
+    rate_limit_ms: 3000
+    max_items: 15
+    enabled: true
+  - name: MIT News — Education
+    url: https://news.mit.edu/rss/topic/education
+    topic: education
+    allowed_article_hosts: [news.mit.edu]
+    relevance_terms: [student, students, school, schools, learning, classroom, course, courses, education, university, college, youth, career]
+    rate_limit_ms: 3000
+    max_items: 15
+    enabled: true
+  - name: NASA Technology
+    url: https://www.nasa.gov/technology/feed/
+    topic: it
+    allowed_article_hosts: [www.nasa.gov, nasa.gov]
+    relevance_terms: [robot, robots, robotics, artificial intelligence, ai, machine learning, computer, computing, software, coding, student, students, stem, internship, education]
+    rate_limit_ms: 3000
+    max_items: 20
+    enabled: true
+  - name: NASA News Releases
+    url: https://www.nasa.gov/news-release/feed/
+    topic: youth
+    allowed_article_hosts: [www.nasa.gov, nasa.gov]
+    rate_limit_ms: 3000
+    max_items: 20
+    enabled: false

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="E2E fixture">
+  <rect width="800" height="600" fill="#234263"/>
+  <rect x="35" y="35" width="730" height="530" fill="none" stroke="#9bc6de" stroke-width="5"/>
+  <text x="400" y="275" text-anchor="middle" font-family="sans-serif" font-size="54" fill="#fff">E2E TEST MEDIA</text>
+  <text x="400" y="340" text-anchor="middle" font-family="sans-serif" font-size="30" fill="#c7e3f1">Isolated test database only</text>
+</svg>

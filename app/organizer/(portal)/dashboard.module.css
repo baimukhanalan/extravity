@@ -1,0 +1,21 @@
+.dashboard { padding: 20px 0 72px; color: #12263f; font-family: 'Golos Text', system-ui, sans-serif; }
+.hero { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 20px; }
+.hero h1 { font-family: Prata, Georgia, serif; font-size: clamp(2.55rem, 4.8vw, 4.25rem); font-weight: 400; letter-spacing: -.055em; line-height: 1.1; overflow-wrap: anywhere; }
+.hero p { margin-top: 10px; color: #617188; font-size: .95rem; }
+.hero a { min-height: 48px; background: #2456a0; }
+.notice { margin-top: 28px; border-color: #e8d6aa; border-radius: 9px; background: #fffaf0; padding: 18px; }
+.stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin-top: 32px; }
+.stats > div { min-height: 142px; min-width: 0; border-color: #d8e0e5; border-radius: 9px; padding: 18px; box-shadow: 0 3px 15px rgba(18,38,63,.035); }
+.stats :global(.text-xl) { font-family: Prata, Georgia, serif; font-size: 1.9rem; font-weight: 400; }
+.section { margin-top: 48px; padding-top: 30px; border-top: 1px solid #ccd6de; }
+.section h2 { font-family: Prata, Georgia, serif; font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 400; letter-spacing: -.04em; }
+.list { margin-top: 18px; overflow: hidden; border-color: #d8e0e5; border-radius: 9px; }
+.row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; padding: 19px 22px; transition: background-color 180ms ease; }
+.row:hover { background: #f3f7fa; }
+.row > div:first-child { min-width: 0; flex: 1; }
+.row:focus-visible, .hero a:focus-visible, .notice a:focus-visible { outline: 2px solid #2456a0; outline-offset: 3px; }
+@keyframes lift { from { transform: translateY(13px); } to { transform: translateY(0); } }
+@supports (animation-timeline: view()) { .section { animation: lift linear both; animation-timeline: view(); animation-range: entry 0% cover 15%; } }
+@media (max-width: 930px) { .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .dashboard { padding-top: 12px; } .hero a { width: 100%; } .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .stats > div { min-height: 124px; padding: 14px; } .row { padding: 16px; } }
+@media (prefers-reduced-motion: reduce) { .section { animation: none; } .row { transition: none; } }

@@ -1,0 +1,18 @@
+# Only chats you own or have explicit permission to process. Pair the owner's
+# account locally, run --list-chats, then copy the exact chat id below.
+chats:
+  - key: "example_opportunities"
+    title: "Example opportunities chat"
+    transport: "linked_device"
+    chat_id: "000000000000000000@g.us"
+    path: "imports/example-opportunities.jsonl"
+    # Public organizer/source page. Never put a private WhatsApp invite here.
+    source_url: "https://example.kz/opportunities"
+    # Only a verified public @newsletter channel with its exact
+    # https://www.whatsapp.com/channel/<id> URL can set this true.
+    public_provenance: false
+    category: "forum"
+    enabled: false
+    trusted: false
+    include_media: true
+    max_messages: 200

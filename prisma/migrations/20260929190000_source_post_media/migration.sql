@@ -1,0 +1,1 @@
+ALTER TYPE "OpportunityMediaRightsState" ADD VALUE IF NOT EXISTS 'SOURCE_POST';

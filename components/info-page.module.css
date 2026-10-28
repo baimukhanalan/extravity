@@ -1,0 +1,135 @@
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin: 24px auto 0;
+  width: min(calc(100% - 32px), 1180px);
+  border: 1px solid color-mix(in srgb, var(--primary) 12%, var(--border));
+  border-radius: 32px;
+  background: linear-gradient(145deg, #101d36 0%, #172b50 54%, #162e46 100%);
+  color: #fff;
+}
+
+.heroGlow {
+  position: absolute;
+  z-index: -1;
+  right: -14%;
+  bottom: -125%;
+  width: 68%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(105, 157, 233, .44), transparent 68%);
+  pointer-events: none;
+}
+
+.heroInner {
+  margin: 0 auto;
+  max-width: 900px;
+  padding: clamp(64px, 9vw, 112px) 24px;
+  text-align: center;
+}
+
+.eyebrow {
+  display: inline-flex;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, .2);
+  border-radius: 99px;
+  background: rgba(255, 255, 255, .08);
+  color: #bed6ff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.heroTitle {
+  margin-top: 22px;
+  font-size: clamp(38px, 5.5vw, 68px);
+  font-weight: 680;
+  line-height: 1.07;
+  letter-spacing: -.052em;
+  text-wrap: balance;
+}
+
+.heroSubtitle {
+  margin: 22px auto 0;
+  max-width: 700px;
+  color: #d5e1f5;
+  font-size: clamp(16px, 2vw, 19px);
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+.heroAction { margin-top: 30px; }
+
+.features {
+  margin: 0 auto;
+  max-width: 1120px;
+  padding: clamp(40px, 6vw, 72px) 16px;
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.featureCard {
+  border-radius: 22px;
+  background: linear-gradient(160deg, var(--surface) 0%, color-mix(in srgb, var(--surface) 90%, var(--primary)) 100%);
+  transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+}
+
+.featureCard:hover {
+  transform: translateY(-5px);
+  border-color: color-mix(in srgb, var(--primary) 35%, var(--border));
+  box-shadow: 0 18px 36px rgba(28, 52, 91, .1);
+}
+
+.featureIcon {
+  display: flex;
+  height: 44px;
+  width: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--primary) 12%, var(--surface));
+  color: var(--primary);
+}
+
+.featureTitle { margin-top: 24px; font-size: 18px; font-weight: 650; letter-spacing: -.02em; }
+.featureText { margin-top: 8px; color: var(--muted-foreground); font-size: 14px; line-height: 1.7; }
+.prose { scroll-margin-top: 40px; }
+
+@supports (animation-timeline: view()) {
+  .featureCard {
+    animation: revealUp linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 35%;
+  }
+  .prose {
+    animation: revealUp linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 18%;
+  }
+}
+
+@keyframes revealUp {
+  from { opacity: .35; transform: translateY(22px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 800px) {
+  .featureGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 560px) {
+  .hero { margin-top: 12px; width: calc(100% - 20px); border-radius: 22px; }
+  .heroInner { padding: 58px 22px 64px; }
+  .featureGrid { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .featureCard, .prose { animation: none !important; transition: none; }
+  .featureCard:hover { transform: none; }
+}

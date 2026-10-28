@@ -1,0 +1,207 @@
+sources:
+  - { username: "astana_hub", status: "candidate" }
+  - { username: "startupchoyxona", status: "candidate" }
+  - { username: "startup_course_com", status: "candidate" }
+  - { username: "devs_kz", status: "candidate" }
+  - { username: "jasa_project", status: "candidate" }
+  - { username: "uppertunity", status: "candidate" }
+  - { username: "qaz_it_events", status: "candidate" }
+  - { username: "daryn_centre", status: "candidate" }
+  - { username: "NISolympiads19", status: "candidate" }
+  - { username: "adviser_kz", status: "candidate" }
+  - { username: "grants_scholarships", status: "candidate" }
+  - { username: "theargument_kz", status: "candidate" }
+  - { username: "DC_llTU", status: "candidate" }
+  - { username: "firstroboticskz", status: "candidate" }
+  - { username: "kazrobotics2020", status: "candidate" }
+  - { username: "robobalapan", status: "candidate" }
+  - { username: "we_project", status: "candidate" }
+  - { username: "digitalbussinesskz", status: "candidate" }
+  - { username: "kbtucareer", status: "candidate" }
+  - { username: "studygrants", status: "candidate" }
+  - { username: "grantium", status: "candidate" }
+  - { username: "studyqa", status: "candidate" }
+  - { username: "aieseckz", status: "candidate" }
+  - { username: "univerguide", status: "candidate" }
+  - { username: "smartcharitykz", status: "candidate" }
+  - { username: "volo_kz", status: "candidate" }
+  - { username: "vozhmojnosti", status: "candidate" }
+  - { username: "Turizm_jane_sport_ministrligi", status: "candidate" }
+  - { username: "insports_kz", status: "candidate" }
+  - { username: "jobkz_1", status: "candidate" }
+  - { username: "thetechkz", status: "candidate" }
+  - { username: "fut_careerforum", status: "candidate" }
+  - { username: "idpieltskazakhstan", status: "verified_public_2026-10-24", category: "test-prep" }
+  - { username: "ielts_kz", status: "verified_public_2026-10-24", category: "test-prep" }
+  - { username: "msdc_sat", status: "verified_public_2026-10-24", category: "test-prep" }
+  - { username: "studywithme_r", status: "verified_public_2026-10-24", category: "test-prep" }
+  - { username: "unirizz", status: "verified_public_2026-10-24", category: "test-prep" }
+  - { username: "ainoorsday", status: "verified_public_2026-10-24", category: "test-prep" }
+  - { username: "workandtravel_kazakhstan", status: "candidate" }
+  - { username: "workandtravelenglish", status: "candidate" }
+  - { username: "higgsfieldwithaiesec", status: "candidate" }
+  - { username: "hackathons", status: "candidate" }
+  - { username: "RussianHackers_Channel", status: "candidate" }
+  - { username: "bcedukz", status: "candidate" }
+  - { username: "iqanatkzz", status: "candidate" }
+  - { username: "Roboland_kz", status: "candidate" }
+  - { username: "kzrobotics", status: "candidate" }
+  - { username: "redrobotics_kz", status: "candidate" }
+  - { username: "ElJastary", status: "candidate" }
+  - { username: "qaztechnologies", status: "candidate" }
+  - { username: "sci_gov_kz", status: "candidate" }
+  - { username: "sciencely_almaty", status: "candidate" }
+  - { username: "invisionustories", status: "candidate" }
+  - { username: "skillbox_kz", status: "candidate" }
+  - { username: "nfactorial_community", status: "candidate" }
+  - { username: "digital_orda", status: "candidate" }
+  - { username: "kz_nvs", status: "candidate" }
+  - { username: "qazvolunteer", status: "candidate" }
+  - { username: "almaty_marathon", status: "candidate" }
+  - { username: "sportilinet", status: "candidate" }
+  - { username: "art_konkursy", status: "candidate" }
+  - { username: "career_hub_kz", status: "candidate" }
+  - { username: "devkz_jobs", status: "candidate" }
+  - { username: "myextrakz", status: "candidate" }
+  - { username: "techozimiz", status: "candidate" }
+  - { username: "stanbasetech", status: "candidate" }
+  - { username: "techgardenalmaty", status: "candidate" }
+  - { username: "ouvrelife", status: "candidate" }
+  - { username: "westart_kz", status: "candidate" }
+  - { username: "academixhub", status: "candidate" }
+  - { username: "investlyhub", status: "candidate" }
+  - { username: "alanbai_base", status: "candidate" }
+  - { username: "girlsgofirst", status: "candidate" }
+  - { username: "aiacademyybot", status: "candidate" }
+  - { username: "PowerTable_bot", status: "candidate" }
+  - { username: "school_grants", status: "candidate" }
+  - { username: "olimprof", status: "candidate" }
+  - { username: "hackathon_kz", status: "candidate" }
+  - { username: "cleverskz", status: "candidate" }
+  - { username: "ivymind", status: "candidate" }
+  - { username: "smart_kz", status: "candidate" }
+  - { username: "shareandcare", status: "candidate" }
+  - { username: "vsekonkursy", status: "candidate" }
+  - { username: "tuntukru", status: "candidate" }
+  - { username: "athenalabs1", status: "candidate" }
+  - { username: "educationpunktb", status: "live_sample_checked_2026-10-22" }
+  - { username: "sirius_courses", status: "live_sample_checked_2026-10-22" }
+  - { username: "kids_draw", status: "live_sample_checked_2026-10-22" }
+  - { username: "mixtapekazakhdebate", status: "live_sample_checked_2026-10-22" }
+  - { username: "grantscholar", status: "live_sample_checked_2026-10-22" }
+  - { username: "opportunitiesalarm", status: "live_sample_checked_2026-10-22" }
+  - { username: "kz_it_vacancies_internships", status: "live_sample_checked_2026-10-22" }
+  - { username: "bulaq_kz", status: "live_sample_checked_2026-10-22" }
+  - { username: "robotics_csi", status: "live_sample_checked_2026-10-22" }
+  - { username: "artsportedukz", status: "live_sample_checked_2026-10-22" }
+  - { username: "er10_kz", status: "live_sample_checked_2026-10-22" }
+  - { username: "ktzvolunteerkz", status: "live_sample_checked_2026-10-22" }
+  - { username: "nikgrants", status: "live_sample_checked_2026-10-22" }
+  - { username: "siriusprogram", status: "live_sample_checked_2026-10-22" }
+  - { username: "olimpreg", status: "live_sample_checked_2026-10-22" }
+  - { username: "grants_aksels_itd", status: "live_sample_checked_2026-10-22" }
+  - { username: "digitalbusinesskz", status: "candidate" }
+  - { username: "bluescreenkz", status: "candidate" }
+  - { username: "kolesagroup", status: "candidate" }
+  - { username: "profitkazakhstan", status: "candidate" }
+  - { username: "digitalreal", status: "candidate" }
+  - { username: "qazcode_tech", status: "candidate" }
+  - { username: "it_bilimkz", status: "candidate" }
+  - { username: "oqu_agartu", status: "candidate" }
+  - { username: "datanomika", status: "candidate" }
+  - { username: "AlmatyITCommunity", status: "candidate" }
+  - { username: "BigTechDream", status: "candidate" }
+  - { username: "ForbesKaz", status: "search_candidate_2026-10-22", category: "forum" }
+  - { username: "almatydaryny", status: "search_candidate_2026-10-22", category: "olympiad" }
+  - { username: "kartapostupleniya", status: "search_candidate_2026-10-22", category: "career" }
+  - { username: "mamandyktandaupro", status: "search_candidate_2026-10-22", category: "career" }
+  - { username: "proforientacya", status: "search_candidate_2026-10-22", category: "career" }
+  - { username: "launchzonehub", status: "search_candidate_2026-10-22", category: "course" }
+  - { username: "Achievka_kz", status: "search_candidate_2026-10-22", category: "course" }
+  - { username: "theverbaclub", status: "search_candidate_2026-10-22", category: "course" }
+  - { username: "python4olymp", status: "search_candidate_2026-10-22", category: "course" }
+  - { username: "nlogninfo", status: "search_candidate_2026-10-22", category: "course" }
+  - { username: "nucleus_borziyon", status: "search_candidate_2026-10-22", category: "course" }
+  - { username: "asyl_edvibe", status: "search_candidate_2026-10-22", category: "course" }
+  - { username: "Lingua_Insight", status: "search_candidate_2026-10-22", category: "course" }
+  - { username: "ruszolotaya", status: "search_candidate_2026-10-22", category: "creative" }
+  - { username: "konkursdounou", status: "search_candidate_2026-10-22", category: "creative" }
+  - { username: "lhkfeed", status: "search_candidate_2026-10-22", category: "creative" }
+  - { username: "rumcdo_debates", status: "search_candidate_2026-10-22", category: "debate" }
+  - { username: "DebatersKz", status: "search_candidate_2026-10-22", category: "debate" }
+  - { username: "pfs_company", status: "search_candidate_2026-10-22", category: "exchange" }
+  - { username: "edu_traveler", status: "search_candidate_2026-10-22", category: "exchange" }
+  - { username: "NUKUDA7", status: "search_candidate_2026-10-22", category: "exchange" }
+  - { username: "englingo", status: "search_candidate_2026-10-22", category: "exchange" }
+  - { username: "smapse", status: "search_candidate_2026-10-22", category: "exchange" }
+  - { username: "ed_world", status: "search_candidate_2026-10-22", category: "exchange" }
+  - { username: "studypassru", status: "search_candidate_2026-10-22", category: "exchange" }
+  - { username: "studkit_edu", status: "search_candidate_2026-10-22", category: "exchange" }
+  - { username: "universeopps", status: "search_candidate_2026-10-22", category: "forum" }
+  - { username: "oppbridge", status: "search_candidate_2026-10-22", category: "forum" }
+  - { username: "roadtouniv", status: "search_candidate_2026-10-22", category: "forum" }
+  - { username: "edugrant_kg", status: "search_candidate_2026-10-22", category: "forum" }
+  - { username: "startupVGlobal", status: "search_candidate_2026-10-22", category: "forum" }
+  - { username: "coreteamth", status: "search_candidate_2026-10-22", category: "forum" }
+  - { username: "localimpacthackaton", status: "search_candidate_2026-10-22", category: "forum" }
+  - { username: "kbtusite", status: "search_candidate_2026-10-22", category: "forum" }
+  - { username: "magzhanandhislife", status: "search_candidate_2026-10-22", category: "forum" }
+  - { username: "economiclink", status: "search_candidate_2026-10-22", category: "forum" }
+  - { username: "eventsitrus", status: "search_candidate_2026-10-22", category: "hackathon" }
+  - { username: "A_hack2025", status: "search_candidate_2026-10-22", category: "hackathon" }
+  - { username: "Hackathonlist", status: "search_candidate_2026-10-22", category: "hackathon" }
+  - { username: "fiztexhackathon", status: "search_candidate_2026-10-22", category: "hackathon" }
+  - { username: "nu_acm_w", status: "search_candidate_2026-10-22", category: "hackathon" }
+  - { username: "rucodefestival", status: "search_candidate_2026-10-22", category: "hackathon" }
+  - { username: "youngcareer", status: "search_candidate_2026-10-22", category: "internship" }
+  - { username: "it_interns", status: "search_candidate_2026-10-22", category: "internship" }
+  - { username: "young_intern", status: "search_candidate_2026-10-22", category: "internship" }
+  - { username: "newdirections", status: "search_candidate_2026-10-22", category: "internship" }
+  - { username: "Houseofinternships", status: "search_candidate_2026-10-22", category: "internship" }
+  - { username: "it_internships_kz", status: "search_candidate_2026-10-22", category: "internship" }
+  - { username: "astanadaryny", status: "search_candidate_2026-10-22", category: "olympiad" }
+  - { username: "nescokz", status: "search_candidate_2026-10-22", category: "olympiad" }
+  - { username: "olymp_bmstu", status: "search_candidate_2026-10-22", category: "olympiad" }
+  - { username: "allcompetiotons", status: "search_candidate_2026-10-22", category: "olympiad" }
+  - { username: "KazOpenLing", status: "search_candidate_2026-10-22", category: "olympiad" }
+  - { username: "kzsmartspace", status: "search_candidate_2026-10-22", category: "robotics" }
+  - { username: "ev3lego", status: "search_candidate_2026-10-22", category: "robotics" }
+  - { username: "swimteamvbp", status: "search_candidate_2026-10-22", category: "sport" }
+  - { username: "kids_sport_evp", status: "search_candidate_2026-10-22", category: "sport" }
+  - { username: "alivebechannel", status: "search_candidate_2026-10-22", category: "sport" }
+  - { username: "Athletex", status: "search_candidate_2026-10-22", category: "sport" }
+  - { username: "KzBrawlStarsTournaments", status: "search_candidate_2026-10-22", category: "sport" }
+  - { username: "QazStartup", status: "search_candidate_2026-10-22", category: "startup" }
+  - { username: "AUBIAK", status: "search_candidate_2026-10-22", category: "startup" }
+  - { username: "venture_kz", status: "search_candidate_2026-10-22", category: "startup" }
+  - { username: "KBTUstartup", status: "search_candidate_2026-10-22", category: "startup" }
+  - { username: "KBTU_IT", status: "search_candidate_2026-10-22", category: "startup" }
+  - { username: "startupBishkek", status: "search_candidate_2026-10-22", category: "startup" }
+  - { username: "StartupTash", status: "search_candidate_2026-10-22", category: "startup" }
+  - { username: "VolunteersNVS", status: "search_candidate_2026-10-22", category: "volunteer" }
+  - { username: "unvkaz", status: "search_candidate_2026-10-22", category: "volunteer" }
+  - { username: "adalvolunteerclub", status: "search_candidate_2026-10-22", category: "volunteer" }
+  - { username: "profenture", status: "search_candidate_2026-10-22", category: "volunteer" }
+  - { username: "casecontest", status: "candidate" }
+  - { username: "case_in", status: "candidate" }
+  - { username: "GreenKazakhstan", status: "candidate" }
+  - { username: "hsemun", status: "enabled_content_canary_2026-10-26", category: "mun" }
+  - { username: "msumun", status: "enabled_content_canary_2026-10-26", category: "mun" }
+  - { username: "modelun_mslu", status: "enabled_content_canary_2026-10-26", category: "mun" }
+  - { username: "mun_community", status: "enabled_content_canary_2026-10-26", category: "mun" }
+  - { username: "mcmun2025", status: "enabled_content_canary_2026-10-26", category: "mun" }
+  - { username: "UNA_ET", status: "enabled_content_canary_2026-10-26", category: "mun" }
+  - { username: "hulsachannel", status: "enabled_content_canary_2026-10-26", category: "debate" }
+  - { username: "cuprtc", status: "enabled_content_canary_2026-10-26", category: "robotics" }
+  - { username: "eurobot_russia", status: "enabled_content_canary_2026-10-26", category: "robotics" }
+  - { username: "codefuture", status: "enabled_content_canary_2026-10-26", category: "robotics" }
+  - { username: "science_shared_campus", status: "enabled_content_canary_2026-10-26", category: "science" }
+  - { username: "ayssjinr", status: "enabled_content_canary_2026-10-26", category: "research" }
+  - { username: "saidtelegram_official", status: "enabled_content_canary_2026-10-26", category: "research" }
+  - { username: "smart_lab_news", status: "enabled_content_canary_2026-10-26", category: "research" }
+  - { username: "Akadeemy_Community", status: "enabled_content_canary_2026-10-26", category: "bootcamp" }
+  - { username: "DSR_Tashkent", status: "enabled_content_canary_2026-10-26", category: "bootcamp" }
+  - { username: "just_for_student", status: "enabled_content_canary_2026-10-26", category: "summer" }
+  - { username: "scholarshipscorner", status: "enabled_content_canary_2026-10-26", category: "summer" }
+  - { username: "SHINECYS", status: "enabled_content_canary_2026-10-26", category: "volunteer" }
+  - { username: "youthbank", status: "enabled_content_canary_2026-10-26", category: "social" }
