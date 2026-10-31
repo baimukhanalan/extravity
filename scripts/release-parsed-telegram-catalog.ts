@@ -208,10 +208,9 @@ async function main() {
       .map((row) => row.applicationUrl)
       .filter((value): value is string => Boolean(value)),
   );
-  const publishedInCandidateCategories = await db.opportunity.findMany({
+  const publishedCatalogRows = await db.opportunity.findMany({
     where: {
       id: { notIn: rows.map((row) => row.id) },
-      categoryId: { in: [...new Set(rows.map((row) => row.categoryId))] },
       deletedAt: null,
       moderationStatus: "APPROVED",
       status: {
@@ -225,14 +224,11 @@ async function main() {
         ],
       },
     },
-    select: { categoryId: true, title: true },
+    select: { title: true },
   });
-  const releasedTitlesByCategory = new Map<string, string[]>();
-  for (const published of publishedInCandidateCategories) {
-    const titles = releasedTitlesByCategory.get(published.categoryId) ?? [];
-    titles.push(published.title);
-    releasedTitlesByCategory.set(published.categoryId, titles);
-  }
+  const releasedTitles = publishedCatalogRows.map(
+    (published) => published.title,
+  );
   const publishedByOpportunity = new Map<string, Date>();
   for (const raw of rawItems) {
     if (!raw.opportunityId || publishedByOpportunity.has(raw.opportunityId))
@@ -251,7 +247,7 @@ async function main() {
     if (
       isNearDuplicateTitle(
         releaseTitle(row) ?? row.title,
-        releasedTitlesByCategory.get(row.categoryId) ?? [],
+        releasedTitles,
       )
     )
       return false;
