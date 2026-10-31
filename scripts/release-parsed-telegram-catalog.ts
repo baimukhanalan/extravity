@@ -41,9 +41,19 @@ async function main() {
     sourceType: { in: ["telegram", "telegram_forward"] },
     sourceUrl: { startsWith: "https://t.me/" },
     moderationStatus: "PENDING",
-    OR: [
-      { applicationDeadline: null },
-      { applicationDeadline: { gt: cutoff } },
+    AND: [
+      {
+        OR: [
+          { applicationDeadline: null },
+          { applicationDeadline: { gt: cutoff } },
+        ],
+      },
+      {
+        OR: [
+          { eventStartDate: null },
+          { eventStartDate: { gt: now } },
+        ],
+      },
     ],
     media: { some: publicSourceMediaWhere },
     provenance: { is: { accessScope: "PUBLIC" } },
