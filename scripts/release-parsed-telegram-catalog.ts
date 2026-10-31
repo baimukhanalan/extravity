@@ -31,6 +31,13 @@ function isDurablePublicMedia(media: { storageKey: string | null }): boolean {
   return media.storageKey?.startsWith("telegram-archive:v1:") === true;
 }
 
+function sourcePublishedAt(value: Prisma.JsonValue): Date | null {
+  const raw = objectValue(value).sourcePublishedAt;
+  if (typeof raw !== "string") return null;
+  const parsed = new Date(raw);
+  return Number.isFinite(parsed.getTime()) ? parsed : null;
+}
+
 async function main() {
   const now = new Date();
   const cutoff = new Date(now.getTime() - 10 * 864e5);
@@ -111,11 +118,30 @@ async function main() {
     },
     orderBy: { id: "asc" },
   });
-  const selected = rows.filter((row) =>
-    row.media.some((media) =>
-      isOriginalTelegramPostMedia(row.sourceUrl, media),
-    ),
-  );
+  const rawItems = await db.rawSourceItem.findMany({
+    where: { opportunityId: { in: rows.map((row) => row.id) } },
+    orderBy: { createdAt: "desc" },
+    select: { opportunityId: true, extracted: true },
+  });
+  const publishedByOpportunity = new Map<string, Date>();
+  for (const raw of rawItems) {
+    if (!raw.opportunityId || publishedByOpportunity.has(raw.opportunityId))
+      continue;
+    const publishedAt = sourcePublishedAt(raw.extracted);
+    if (publishedAt) publishedByOpportunity.set(raw.opportunityId, publishedAt);
+  }
+  const recentPostCutoff = new Date(now.getTime() - 30 * 864e5);
+  const selected = rows.filter((row) => {
+    if (
+      !row.media.some((media) =>
+        isOriginalTelegramPostMedia(row.sourceUrl, media),
+      )
+    )
+      return false;
+    if (row.applicationDeadline || row.eventStartDate) return true;
+    const publishedAt = publishedByOpportunity.get(row.id);
+    return Boolean(publishedAt && publishedAt >= recentPostCutoff);
+  });
 
   if (!apply) {
     console.log(
@@ -125,6 +151,7 @@ async function main() {
           category: category ?? "all",
           candidates: candidateCount,
           selectedExactMedia: selected.length,
+          excludedUndatedOrStale: rows.length - selected.length,
         },
         null,
         2,

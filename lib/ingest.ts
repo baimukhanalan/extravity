@@ -185,6 +185,8 @@ export async function ingestCandidates(connector: Connector, items: Candidate[])
       organizerEvidence: item.organizerEvidence ?? null,
       priceEvidenceUrl: item.priceEvidenceUrl ?? null,
       priceEvidenceText: item.priceEvidenceText ?? null,
+      sourcePublishedAt: item.sourcePublishedAt ?? null,
+      sourceEditedAt: item.sourceEditedAt ?? null,
     };
 
     if (!category) {
