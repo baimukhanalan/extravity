@@ -188,7 +188,16 @@ async function main() {
           id: { notIn: rows.map((row) => row.id) },
           deletedAt: null,
           moderationStatus: "APPROVED",
-          status: { in: ["PUBLISHED", "CLOSED"] },
+          status: {
+            in: [
+              "PUBLISHED",
+              "REGISTRATION_OPEN",
+              "DEADLINE_SOON",
+              "SUSPICIOUS",
+              "CLOSED",
+              "COMPLETED",
+            ],
+          },
           applicationUrl: { in: candidateApplicationUrls },
         },
         select: { applicationUrl: true },
@@ -205,7 +214,16 @@ async function main() {
       categoryId: { in: [...new Set(rows.map((row) => row.categoryId))] },
       deletedAt: null,
       moderationStatus: "APPROVED",
-      status: { in: ["PUBLISHED", "CLOSED"] },
+      status: {
+        in: [
+          "PUBLISHED",
+          "REGISTRATION_OPEN",
+          "DEADLINE_SOON",
+          "SUSPICIOUS",
+          "CLOSED",
+          "COMPLETED",
+        ],
+      },
     },
     select: { categoryId: true, title: true },
   });
