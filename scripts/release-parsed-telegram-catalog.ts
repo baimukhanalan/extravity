@@ -113,6 +113,7 @@ async function main() {
   const rows = await db.opportunity.findMany({
     where: { id: { in: exactIds } },
     include: {
+      category: { select: { slug: true } },
       provenance: { select: { adminOnlyJson: true } },
       media: { where: publicSourceMediaWhere, orderBy: { position: "asc" } },
     },
@@ -152,6 +153,16 @@ async function main() {
           candidates: candidateCount,
           selectedExactMedia: selected.length,
           excludedUndatedOrStale: rows.length - selected.length,
+          selection: selected.slice(0, 100).map((row) => ({
+            id: row.id,
+            slug: row.slug,
+            title: row.title,
+            category: row.category.slug,
+            applicationDeadline: row.applicationDeadline,
+            eventStartDate: row.eventStartDate,
+            sourceUrl: row.sourceUrl,
+          })),
+          selectionTruncated: selected.length > 100,
         },
         null,
         2,
