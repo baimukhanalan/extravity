@@ -217,3 +217,10 @@ channels:
   - { username: "opportunity_alerts", title: "Opportunity Alerts", category: "mentorship", enabled: true, trusted: false, max_posts: 40 }
   - { username: "alwiutmun", title: "ALWIUT MUN", category: "mun", enabled: true, trusted: false, max_posts: 40 }
   - { username: "Opportunity_4_all", title: "Opportunity 4 All", category: "mun", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "colaboratoria", title: "Колаборатория", category: "summer", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "colaboratoria_edu", title: "Колаборатория.Образование", category: "summer", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "prodebaty", title: "Про дебаты", category: "debate", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "mtd_kz", title: "MTD Kazakhstan", category: "debate", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "scolar_tashkent", title: "SCOLAR Network Tashkent", category: "debate", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "ndcuzb", title: "Nationwide Debate Championship", category: "debate", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "MasterIELTS_Online", title: "IELTS Edu-Platform", category: "test-prep", enabled: true, trusted: false, max_posts: 40 }
