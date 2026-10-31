@@ -38,6 +38,7 @@ jobs:
         if: steps.guard.outputs.ready == 'true'
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL_UNPOOLED }}
+          PATH: /usr/lib/postgresql/17/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
         run: ./scripts/backup.sh backups
 
       - name: Upload artifact
