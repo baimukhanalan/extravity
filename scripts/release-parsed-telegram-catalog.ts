@@ -1,11 +1,18 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import { publicSourceMediaWhere, isOriginalTelegramPostMedia } from "../lib/source-media-provenance";
+import {
+  publicSourceMediaWhere,
+  isOriginalTelegramPostMedia,
+} from "../lib/source-media-provenance";
 
 const db = new PrismaClient();
 const warning = "Условия уточняйте у организатора.";
 
-function objectValue(value: Prisma.JsonValue | null | undefined): Record<string, unknown> {
-  return value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {};
+function objectValue(
+  value: Prisma.JsonValue | null | undefined,
+): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {};
 }
 
 function requestedLimit(): number {
@@ -47,25 +54,36 @@ async function main() {
       select: {
         id: true,
         sourceUrl: true,
-        media: { where: publicSourceMediaWhere, select: {
-          url: true,
-          storageKey: true,
-          platformMediaId: true,
-          processingState: true,
-          rightsState: true,
-          rightsEvidenceRef: true,
-        } },
+        media: {
+          where: publicSourceMediaWhere,
+          select: {
+            url: true,
+            storageKey: true,
+            platformMediaId: true,
+            processingState: true,
+            rightsState: true,
+            rightsEvidenceRef: true,
+          },
+        },
       },
     });
     if (page.length === 0) break;
     for (const row of page) {
-      if (row.media.length > 0
-        && row.media.every(isDurablePublicMedia)
-        && row.media.some((media) => isOriginalTelegramPostMedia(row.sourceUrl, media))) exactIds.push(row.id);
+      if (
+        row.media.length > 0 &&
+        row.media.every(isDurablePublicMedia) &&
+        row.media.some((media) =>
+          isOriginalTelegramPostMedia(row.sourceUrl, media),
+        )
+      )
+        exactIds.push(row.id);
       if (exactIds.length >= limit) break;
     }
     cursor = page.at(-1)?.id;
-    if (page.length < Math.min(500, Math.max(50, (limit - exactIds.length) * 2))) break;
+    if (
+      page.length < Math.min(500, Math.max(50, (limit - exactIds.length) * 2))
+    )
+      break;
   }
   const rows = await db.opportunity.findMany({
     where: { id: { in: exactIds } },
@@ -75,71 +93,118 @@ async function main() {
     },
     orderBy: { id: "asc" },
   });
-  const selected = rows.filter((row) => row.media.some((media) => isOriginalTelegramPostMedia(row.sourceUrl, media)));
+  const selected = rows.filter((row) =>
+    row.media.some((media) =>
+      isOriginalTelegramPostMedia(row.sourceUrl, media),
+    ),
+  );
 
   if (!apply) {
-    console.log(JSON.stringify({ mode: "plan", candidates: candidateCount, selectedExactMedia: selected.length }, null, 2));
+    console.log(
+      JSON.stringify(
+        {
+          mode: "plan",
+          candidates: candidateCount,
+          selectedExactMedia: selected.length,
+        },
+        null,
+        2,
+      ),
+    );
     return;
   }
 
   let released = 0;
-  await db.$transaction(async (tx) => {
-    for (const row of selected) {
-      const durableMediaCount = await tx.opportunityMedia.count({
-        where: {
-          opportunityId: row.id,
-          ...publicSourceMediaWhere,
-          storageKey: { startsWith: "telegram-archive:v1:" },
-        },
-      });
-      if (durableMediaCount !== row.media.length || durableMediaCount === 0) continue;
-      const deadline = row.applicationDeadline;
-      const nextStatus = deadline && deadline <= now ? "CLOSED" : "PUBLISHED";
-      const shortDescription = row.shortDescription.replace(warning, "").trim().slice(0, 500);
-      const fullDescription = row.fullDescription.replace(warning, "").trim().slice(0, 8000);
-      const changed = await tx.opportunity.updateMany({
-        where: { id: row.id, moderationStatus: "PENDING", deletedAt: null },
-        data: {
-          status: nextStatus,
-          moderationStatus: "APPROVED",
-          verifiedAt: null,
-          lastCheckedAt: now,
-          directApplySupported: false,
-          assistedApplySupported: false,
-          shortDescription,
-          fullDescription,
-        },
-      });
-      if (changed.count !== 1) continue;
-      const current = objectValue(row.provenance?.adminOnlyJson);
-      await tx.opportunityProvenance.update({
-        where: { opportunityId: row.id },
-        data: {
-          adminOnlyJson: {
-            ...current,
-            publicListingMode: "parsed_unverified",
-            publicListingAt: now.toISOString(),
-            applicationDisabled: false,
-            publicNotice: warning,
-          } as Prisma.InputJsonValue,
-        },
-      });
-      await tx.auditLog.create({
-        data: {
-          action: "opportunity_released_as_parsed_listing",
-          entity: "opportunity",
-          entityId: row.id,
-          meta: { sourcePost: row.sourceUrl, exactMediaCount: row.media.length, applicationDisabled: false },
-        },
-      });
-      released += 1;
-    }
-  }, { maxWait: 60_000, timeout: 180_000 });
+  const transactionBatchSize = 20;
+  for (
+    let offset = 0;
+    offset < selected.length;
+    offset += transactionBatchSize
+  ) {
+    const batch = selected.slice(offset, offset + transactionBatchSize);
+    released += await db.$transaction(
+      async (tx) => {
+        let batchReleased = 0;
+        for (const row of batch) {
+          const durableMediaCount = await tx.opportunityMedia.count({
+            where: {
+              opportunityId: row.id,
+              ...publicSourceMediaWhere,
+              storageKey: { startsWith: "telegram-archive:v1:" },
+            },
+          });
+          if (durableMediaCount !== row.media.length || durableMediaCount === 0)
+            continue;
+          const deadline = row.applicationDeadline;
+          const nextStatus =
+            deadline && deadline <= now ? "CLOSED" : "PUBLISHED";
+          const shortDescription = row.shortDescription
+            .replace(warning, "")
+            .trim()
+            .slice(0, 500);
+          const fullDescription = row.fullDescription
+            .replace(warning, "")
+            .trim()
+            .slice(0, 8000);
+          const changed = await tx.opportunity.updateMany({
+            where: { id: row.id, moderationStatus: "PENDING", deletedAt: null },
+            data: {
+              status: nextStatus,
+              moderationStatus: "APPROVED",
+              verifiedAt: null,
+              lastCheckedAt: now,
+              directApplySupported: false,
+              assistedApplySupported: false,
+              shortDescription,
+              fullDescription,
+            },
+          });
+          if (changed.count !== 1) continue;
+          const current = objectValue(row.provenance?.adminOnlyJson);
+          await tx.opportunityProvenance.update({
+            where: { opportunityId: row.id },
+            data: {
+              adminOnlyJson: {
+                ...current,
+                publicListingMode: "parsed_unverified",
+                publicListingAt: now.toISOString(),
+                applicationDisabled: false,
+                publicNotice: warning,
+              } as Prisma.InputJsonValue,
+            },
+          });
+          await tx.auditLog.create({
+            data: {
+              action: "opportunity_released_as_parsed_listing",
+              entity: "opportunity",
+              entityId: row.id,
+              meta: {
+                sourcePost: row.sourceUrl,
+                exactMediaCount: row.media.length,
+                applicationDisabled: false,
+              },
+            },
+          });
+          batchReleased += 1;
+        }
+        return batchReleased;
+      },
+      { maxWait: 60_000, timeout: 120_000 },
+    );
+  }
 
-  console.log(JSON.stringify({ mode: "apply", selected: selected.length, released }, null, 2));
+  console.log(
+    JSON.stringify(
+      { mode: "apply", selected: selected.length, released },
+      null,
+      2,
+    ),
+  );
 }
 
-void main().finally(() => db.$disconnect()).catch((error) => {
-  console.error(error instanceof Error ? error.message : String(error));
-  process.exitCode = 1;
-});
+void main()
+  .finally(() => db.$disconnect())
+  .catch((error) => {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exitCode = 1;
+  });
