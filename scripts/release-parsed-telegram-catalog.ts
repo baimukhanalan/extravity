@@ -58,6 +58,41 @@ function releaseTitle(row: {
   return row.title;
 }
 
+function titleTokens(title: string): Set<string> {
+  const stopWords = new Set([
+    "the",
+    "and",
+    "for",
+    "для",
+    "на",
+    "в",
+    "по",
+    "от",
+    "прием",
+    "приема",
+    "заявок",
+    "открыл",
+    "открыла",
+    "открыт",
+  ]);
+  return new Set(
+    (title.toLocaleLowerCase("ru").match(/[\p{L}\p{N}]+/gu) ?? []).filter(
+      (token) => token.length >= 3 && !stopWords.has(token),
+    ),
+  );
+}
+
+function isNearDuplicateTitle(title: string, publishedTitles: string[]): boolean {
+  const tokens = titleTokens(title);
+  if (tokens.size < 4) return false;
+  return publishedTitles.some((publishedTitle) => {
+    const publishedTokens = titleTokens(publishedTitle);
+    if (publishedTokens.size < 4) return false;
+    const shared = [...tokens].filter((token) => publishedTokens.has(token)).length;
+    return shared >= 3 && shared / Math.min(tokens.size, publishedTokens.size) >= 0.65;
+  });
+}
+
 async function main() {
   const now = new Date();
   const cutoff = new Date(now.getTime() - 10 * 864e5);
@@ -164,6 +199,22 @@ async function main() {
       .map((row) => row.applicationUrl)
       .filter((value): value is string => Boolean(value)),
   );
+  const publishedInCandidateCategories = await db.opportunity.findMany({
+    where: {
+      id: { notIn: rows.map((row) => row.id) },
+      categoryId: { in: [...new Set(rows.map((row) => row.categoryId))] },
+      deletedAt: null,
+      moderationStatus: "APPROVED",
+      status: { in: ["PUBLISHED", "CLOSED"] },
+    },
+    select: { categoryId: true, title: true },
+  });
+  const releasedTitlesByCategory = new Map<string, string[]>();
+  for (const published of publishedInCandidateCategories) {
+    const titles = releasedTitlesByCategory.get(published.categoryId) ?? [];
+    titles.push(published.title);
+    releasedTitlesByCategory.set(published.categoryId, titles);
+  }
   const publishedByOpportunity = new Map<string, Date>();
   for (const raw of rawItems) {
     if (!raw.opportunityId || publishedByOpportunity.has(raw.opportunityId))
@@ -177,6 +228,13 @@ async function main() {
     if (
       row.applicationUrl &&
       releasedApplicationUrls.has(row.applicationUrl)
+    )
+      return false;
+    if (
+      isNearDuplicateTitle(
+        releaseTitle(row) ?? row.title,
+        releasedTitlesByCategory.get(row.categoryId) ?? [],
+      )
     )
       return false;
     if (
