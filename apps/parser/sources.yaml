@@ -75,6 +75,10 @@ sources:
   - { name: "Research Girl Mentorship", type: html, url: "https://researchgirl.org/mentorships", organizer: "Research Girl", category: "mentorship", max_pages: 1, rate_limit_ms: 5000, enabled: true }
   - { name: "European Youth Forum Events", type: html, url: "https://www.youthforum.org/events", organizer: "European Youth Forum", category: "forum", max_pages: 1, rate_limit_ms: 5000, enabled: true }
   - { name: "One Young World Scholarships", type: html, url: "https://www.oneyoungworld.com/scholarships", organizer: "One Young World", category: "mentorship", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "Timisoara International MUN 2026", type: html, url: "https://www.tm-mun.arpd.ro/", organizer: "ARPD", category: "mun", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "Harvard Model UN 2027", type: html, url: "https://www.harvardmun.org/application-process", organizer: "Harvard Model United Nations", category: "mun", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "Korea Students Model UN 2026", type: html, url: "https://ksmun.kr/", organizer: "KSMUN", category: "mun", max_pages: 1, rate_limit_ms: 5000, enabled: true }
+  - { name: "The Experiment Summer Abroad 2027", type: html, url: "https://www.experiment.org/", organizer: "The Experiment in International Living", category: "summer", max_pages: 1, rate_limit_ms: 5000, enabled: true }
   # --- Bundled demo source (proves the pipeline end-to-end, offline-safe) ---
   - name: "Demo — Sample KZ Opportunities"
     type: html

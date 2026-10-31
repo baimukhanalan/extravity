@@ -210,3 +210,10 @@ channels:
   - { username: "EventInAddis", title: "Event in Addis", category: "bootcamp", enabled: true, trusted: false, max_posts: 40 }
   - { username: "searchedoutinfo", title: "SearchedOutInfo", category: "bootcamp", enabled: true, trusted: false, max_posts: 40 }
   - { username: "summerstmark", title: "Summer Program at St. Mark", category: "summer", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "bfsistema", title: "Системная благотворительность", category: "science", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "informasilomba", title: "Informasi Lomba", category: "science", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "smartstudentind", title: "Smart Student", category: "science", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "ConnectAdmissions", title: "Connect Admissions", category: "mentorship", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "opportunity_alerts", title: "Opportunity Alerts", category: "mentorship", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "alwiutmun", title: "ALWIUT MUN", category: "mun", enabled: true, trusted: false, max_posts: 40 }
+  - { username: "Opportunity_4_all", title: "Opportunity 4 All", category: "mun", enabled: true, trusted: false, max_posts: 40 }

@@ -21,6 +21,12 @@ function requestedLimit(): number {
   return Math.max(1, Math.min(500, Number.isFinite(parsed) ? parsed : 100));
 }
 
+function requestedCategory(): string | undefined {
+  const arg = process.argv.find((value) => value.startsWith("--category="));
+  const value = arg?.slice("--category=".length).trim();
+  return value || undefined;
+}
+
 function isDurablePublicMedia(media: { storageKey: string | null }): boolean {
   return media.storageKey?.startsWith("telegram-archive:v1:") === true;
 }
@@ -29,6 +35,7 @@ async function main() {
   const now = new Date();
   const cutoff = new Date(now.getTime() - 10 * 864e5);
   const apply = process.argv.includes("--apply");
+  const category = requestedCategory();
   const where: Prisma.OpportunityWhereInput = {
     deletedAt: null,
     sourceType: { in: ["telegram", "telegram_forward"] },
@@ -40,6 +47,7 @@ async function main() {
     ],
     media: { some: publicSourceMediaWhere },
     provenance: { is: { accessScope: "PUBLIC" } },
+    ...(category ? { category: { slug: category } } : {}),
   };
   const candidateCount = await db.opportunity.count({ where });
   const limit = requestedLimit();
@@ -104,6 +112,7 @@ async function main() {
       JSON.stringify(
         {
           mode: "plan",
+          category: category ?? "all",
           candidates: candidateCount,
           selectedExactMedia: selected.length,
         },
@@ -195,7 +204,7 @@ async function main() {
 
   console.log(
     JSON.stringify(
-      { mode: "apply", selected: selected.length, released },
+      { mode: "apply", category: category ?? "all", selected: selected.length, released },
       null,
       2,
     ),

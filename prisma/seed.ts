@@ -24,7 +24,7 @@ const CATEGORIES = [
   { slug: "creative", nameRu: "Творческие конкурсы", nameKz: "Шығармашылық байқаулар", name: "Creative contests", icon: "Palette" },
   { slug: "internship", nameRu: "Стажировки", nameKz: "Тағылымдамалар", name: "Internships", icon: "Briefcase" },
   { slug: "mentorship", nameRu: "Mentorship-программы", nameKz: "Mentorship бағдарламалары", name: "Mentorship", icon: "UserCheck" },
-  { slug: "forum", nameRu: "Youth forums", nameKz: "Жастар форумдары", name: "Youth forums", icon: "Presentation" },
+  { slug: "forum", nameRu: "Форумы", nameKz: "Жастар форумдары", name: "Youth forums", icon: "Presentation" },
   { slug: "career", nameRu: "Карьерные программы", nameKz: "Мансап бағдарламалары", name: "Career programs", icon: "TrendingUp" },
 ];
 
