@@ -10,7 +10,7 @@ function requireE2eDatabase() {
   }
 }
 
-test("unresolved moderation checks stay out of catalog, related cards, and recommendations", async ({ page }) => {
+test("parsed listings stay public but out of personalized recommendations", async ({ page }) => {
   requireE2eDatabase();
   const prisma = new PrismaClient();
   const marker = `E2E unresolved public ${Date.now()}`;
@@ -38,8 +38,8 @@ test("unresolved moderation checks stay out of catalog, related cards, and recom
       data: {
         slug: `e2e-unresolved-public-${Date.now()}`,
         title: marker,
-        shortDescription: "Условия извлечены автоматически из публичной Telegram-публикации и ещё проверяются. Подача отключена.",
-        fullDescription: "Требует проверки перед публикацией: country, format, price. Подача отключена.",
+        shortDescription: "Условия извлечены автоматически из публичной Telegram-публикации и ещё проверяются.",
+        fullDescription: "Требует проверки перед публикацией: country, format, price.",
         categoryId: category.id,
         organizerName: "E2E organizer",
         sourceType: "telegram",
@@ -67,7 +67,7 @@ test("unresolved moderation checks stay out of catalog, related cards, and recom
             sourceAccount: "extravity_e2e",
             sourcePostId: sourceUrl.split("/").at(-1),
             accessScope: "PUBLIC",
-            adminOnlyJson: { publicListingMode: "parsed_unverified", applicationDisabled: true },
+            adminOnlyJson: { publicListingMode: "parsed_unverified", applicationDisabled: false },
           },
         },
       },
@@ -75,11 +75,12 @@ test("unresolved moderation checks stay out of catalog, related cards, and recom
     opportunityId = opportunity.id;
 
     await page.goto(`/catalog?availability=all&q=${encodeURIComponent(marker)}`);
-    await expect(page.getByText(marker, { exact: true })).toHaveCount(0);
+    await expect(page.getByText(marker, { exact: true })).toBeVisible();
+    await expect(page.getByText("Условия уточняйте у организатора", { exact: true })).toBeVisible();
 
     await page.goto("/opportunities/astana-hub-startup-weekend-2026");
     await expect(page.getByRole("heading", { name: "Astana Hub Startup Weekend" })).toBeVisible();
-    await expect(page.getByText(marker, { exact: true })).toHaveCount(0);
+    await expect(page.getByText(marker, { exact: true })).toBeVisible();
 
     await login(page, email);
     await page.goto("/app/recommendations");

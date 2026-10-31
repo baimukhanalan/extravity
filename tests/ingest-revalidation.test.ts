@@ -557,7 +557,7 @@ describe("same-source ingest revalidation", () => {
       title: "Новая олимпиада по химии",
       sourceUrl: "https://t.me/official/103",
       applicationUrl: sharedApplicationUrl,
-      applicationDeadline: "2026-10-30T23:59:00+05:00",
+      applicationDeadline: "2027-10-30T23:59:00+05:00",
     });
 
     const result = await ingestCandidates(connector, [secondProgram]);
@@ -569,7 +569,7 @@ describe("same-source ingest revalidation", () => {
         title: "Новая олимпиада по химии",
         organizerName: "Official",
         categoryId: "category-1",
-        applicationDeadline: new Date("2026-10-30T23:59:00+05:00"),
+        applicationDeadline: new Date("2027-10-30T23:59:00+05:00"),
       }),
     }));
   });
