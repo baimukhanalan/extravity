@@ -1,0 +1,62 @@
+name: Release verified Telegram catalog candidates
+
+on:
+  workflow_dispatch:
+    inputs:
+      category:
+        description: Category slug or all
+        required: true
+        default: all
+        type: string
+      limit:
+        description: Maximum candidates
+        required: true
+        default: "100"
+        type: string
+      apply:
+        description: Publish selected candidates
+        required: true
+        default: false
+        type: boolean
+
+concurrency:
+  group: telegram-catalog-release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL_UNPOOLED }}
+      CATEGORY: ${{ inputs.category }}
+      LIMIT: ${{ inputs.limit }}
+      APPLY: ${{ inputs.apply }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx prisma generate
+      - name: Validate inputs and release catalog candidates
+        run: |
+          set -euo pipefail
+          test -n "$DATABASE_URL"
+          [[ "$CATEGORY" =~ ^(all|[a-z0-9-]+)$ ]]
+          [[ "$LIMIT" =~ ^[0-9]+$ ]]
+          (( LIMIT >= 1 && LIMIT <= 500 ))
+
+          args=("--limit=$LIMIT")
+          if [[ "$CATEGORY" != "all" ]]; then
+            args+=("--category=$CATEGORY")
+          fi
+          if [[ "$APPLY" == "true" ]]; then
+            args+=("--apply")
+          fi
+
+          npx tsx scripts/release-parsed-telegram-catalog.ts "${args[@]}"
