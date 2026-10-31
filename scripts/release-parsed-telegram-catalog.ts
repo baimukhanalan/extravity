@@ -144,6 +144,26 @@ async function main() {
     orderBy: { createdAt: "desc" },
     select: { opportunityId: true, extracted: true },
   });
+  const candidateApplicationUrls = rows
+    .map((row) => row.applicationUrl)
+    .filter((value): value is string => Boolean(value));
+  const publishedWithSameApplication = candidateApplicationUrls.length
+    ? await db.opportunity.findMany({
+        where: {
+          id: { notIn: rows.map((row) => row.id) },
+          deletedAt: null,
+          moderationStatus: "APPROVED",
+          status: { in: ["PUBLISHED", "CLOSED"] },
+          applicationUrl: { in: candidateApplicationUrls },
+        },
+        select: { applicationUrl: true },
+      })
+    : [];
+  const releasedApplicationUrls = new Set(
+    publishedWithSameApplication
+      .map((row) => row.applicationUrl)
+      .filter((value): value is string => Boolean(value)),
+  );
   const publishedByOpportunity = new Map<string, Date>();
   for (const raw of rawItems) {
     if (!raw.opportunityId || publishedByOpportunity.has(raw.opportunityId))
@@ -154,6 +174,11 @@ async function main() {
   const recentPostCutoff = new Date(now.getTime() - 30 * 864e5);
   const selected = rows.filter((row) => {
     if (!releaseTitle(row)) return false;
+    if (
+      row.applicationUrl &&
+      releasedApplicationUrls.has(row.applicationUrl)
+    )
+      return false;
     if (
       !row.media.some((media) =>
         isOriginalTelegramPostMedia(row.sourceUrl, media),
