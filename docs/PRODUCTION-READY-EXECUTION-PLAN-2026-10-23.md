@@ -1,6 +1,6 @@
 # Extravity — production-ready execution plan
 
-Дата фиксации: 23 октября 2026 года (Asia/Almaty). Обновлено 24 октября 2026 года.
+Дата фиксации: 23 октября 2026 года (Asia/Almaty). Обновлено 31 октября 2026 года.
 
 Этот документ является исполнимым release-планом. Пункт считается закрытым только при наличии доказательства на соответствующем уровне: код/тесты, production runtime, production данные и реальный пользовательский сценарий проверяются отдельно.
 
@@ -36,6 +36,12 @@
 - Локальный release snapshot зелёный, Vercel deployment `dpl_iMtx3GhgP3U88Zv8M88yWdKQUbAz` READY.
 - Gate остаётся открытым: основное приложение ещё не имеет отдельного Git provenance, а `/api/health` не показывает commit SHA.
 
+### Статус 31 октября
+
+- Gate закрыт на commit `b04c491`: TypeScript и ESLint прошли, web unit — 562/562, Playwright E2E — 36/36, production build Vercel завершён успешно.
+- Production deployment `dpl_8bfCwCiYA5mdMdHHjBgB387rer1G` имеет статус `READY`; `https://extravity.vercel.app/api/health` возвращает HTTP 200, `db: up` и `commit: b04c491`.
+- Главная, каталог, новости, health, `robots.txt` и `sitemap.xml` проверены после deployment и возвращают HTTP 200.
+
 ## Gate 2 — Telegram ingestion и publication pipeline
 
 ### Метод
@@ -60,6 +66,13 @@
 - Dry-run canary: 8 кандидатов, 0 blocked offsets. Publish-canary: 2 created, 6 duplicate, 0 failed/quarantined.
 - Обе новые записи получили собственные Telegram media (`READY + SOURCE_POST`) и остались в `PENDING`, потому что не подтверждены дедлайн/форма; публичный каталог не загрязнён.
 - Gate остаётся открытым до 24-часового наблюдения, restart/cursor recovery и первой новой карточки, прошедшей полный public gate.
+
+### Статус 31 октября
+
+- Telegram-сессия сохранена в Render и после redeploy восстановилась без нового QR; collector увидел 87 разрешённых каналов и продолжил работу с удалённым cursor/state.
+- Через контролируемый release-процесс опубликовано 230 дополнительных parsed-listing карточек с предупреждением; проверены 264 связанных исходных Telegram-медиа, все ответили HTTP 200. Production-каталог показывает 833 карточки.
+- Массовый release переведён с одной длинной транзакции на партии по 20 записей; две партии по 100 и остаточная партия завершились без таймаута и дублей.
+- Gate остаётся открытым: бесплатный Render web service фактически остановил collector после 15 минут без входящего трафика и затем запустил новый catch-up. Такой тариф не даёт 24-часовой always-on canary и не подходит для production listener; нужен paid always-on runtime либо смена архитектуры на отдельный поддерживаемый worker.
 
 ## Gate 3 — наблюдаемость, rate limits и восстановление
 
