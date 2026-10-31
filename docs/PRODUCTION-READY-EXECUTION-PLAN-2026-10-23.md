@@ -8,12 +8,11 @@
 
 - Публичный адрес: `https://extravity.vercel.app`.
 - Vercel health: HTTP 200, база данных доступна.
-- Render parser health: HTTP 200; production deploy `f27b036`, hourly non-publishing canary и scheduled collector включены.
-- Allowlist: 182 источника, 180 включены; 12 каналов за один запуск каждые 30 минут. SAT/IELTS-источники остаются `trusted: false`.
-- Контролируемый publish-canary `myextrakz`: 8 кандидатов, 2 создано, 6 дублей, 0 failed, 0 quarantined, 0 blocked offsets.
-- Публичный каталог: 3 карточки, прошедшие строгий Telegram media/provenance gate; все 3 исходных изображения отдаются HTTP 200.
-- Последний web unit suite: 791/791; main parser: 592/592; Render mirror: 591/591 + 2 штатных skip.
-- Последний полный Playwright E2E: 40/40; TypeScript, ESLint и production build зелёные.
+- Render parser health: HTTP 200; production deploy `72c5c92`, scheduled web collector и Telegram collector включены.
+- Telegram collector восстановил сохранённую сессию после redeploy, видит 87 разрешённых каналов и продолжает удалённый cursor/state; health показывает измеримый catch-up progress.
+- Публичный каталог: 833 карточки; 230 parsed Telegram listings добавлены контролируемыми партиями, 264 связанных исходных медиа проверены HTTP 200.
+- Последний web unit suite: 562/562; полный Playwright E2E: 36/36; TypeScript, ESLint и production build зелёные на release commit `b04c491`.
+- Основной production deployment: `dpl_8bfCwCiYA5mdMdHHjBgB387rer1G`; health возвращает `commit: b04c491`.
 - Категория `test-prep` (`SAT / IELTS`) создана в production и присутствует в каталожном фильтре.
 
 ## Gate 1 — зелёный релизный контур
@@ -90,6 +89,12 @@
 - Тестовый сбой создаёт алерт без секретов.
 - Backup создаётся по расписанию и реально восстанавливается.
 - Rate limit работает между разными serverless instances.
+
+### Статус 31 октября
+
+- В коде уже есть Sentry/PostHog hooks, Upstash-aware distributed limiter, backup script и nightly GitHub workflow.
+- В production Vercel отсутствуют `SENTRY_DSN`, PostHog, Upstash и `DATABASE_URL_UNPOOLED`; поэтому внешние алерты, распределённый limiter и nightly backup фактически не активированы.
+- Gate остаётся открытым до добавления владельцем внешних ключей, подтверждения Neon PITR и успешного restore drill на отдельной базе.
 
 ## Gate 4 — пользовательский и юридический запуск бесплатного каталога
 
