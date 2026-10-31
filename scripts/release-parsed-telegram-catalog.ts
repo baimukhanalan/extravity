@@ -38,6 +38,26 @@ function sourcePublishedAt(value: Prisma.JsonValue): Date | null {
   return Number.isFinite(parsed.getTime()) ? parsed : null;
 }
 
+function releaseTitle(row: {
+  title: string;
+  shortDescription: string;
+  fullDescription: string;
+}): string | null {
+  if (
+    /(?:обновил(?:ся|ась|ось)?|теперь\s+\S+\s+не\s+только\s+рассказывает)/i.test(
+      row.title,
+    )
+  )
+    return null;
+  const text = `${row.title}\n${row.shortDescription}\n${row.fullDescription}`;
+  if (
+    /^хакатон\s*[·•|:-]\s*онлайн$/i.test(row.title.trim()) &&
+    /\bCosmo\s+Hacks\s+2026\b/i.test(text)
+  )
+    return "Cosmo Hacks 2026 — онлайн-хакатон для школьников и студентов";
+  return row.title;
+}
+
 async function main() {
   const now = new Date();
   const cutoff = new Date(now.getTime() - 10 * 864e5);
@@ -133,6 +153,7 @@ async function main() {
   }
   const recentPostCutoff = new Date(now.getTime() - 30 * 864e5);
   const selected = rows.filter((row) => {
+    if (!releaseTitle(row)) return false;
     if (
       !row.media.some((media) =>
         isOriginalTelegramPostMedia(row.sourceUrl, media),
@@ -152,11 +173,11 @@ async function main() {
           category: category ?? "all",
           candidates: candidateCount,
           selectedExactMedia: selected.length,
-          excludedUndatedOrStale: rows.length - selected.length,
+          excludedBySafetyChecks: rows.length - selected.length,
           selection: selected.slice(0, 100).map((row) => ({
             id: row.id,
             slug: row.slug,
-            title: row.title,
+            title: releaseTitle(row),
             category: row.category.slug,
             applicationDeadline: row.applicationDeadline,
             eventStartDate: row.eventStartDate,
@@ -206,6 +227,7 @@ async function main() {
           const changed = await tx.opportunity.updateMany({
             where: { id: row.id, moderationStatus: "PENDING", deletedAt: null },
             data: {
+              title: releaseTitle(row) ?? row.title,
               status: nextStatus,
               moderationStatus: "APPROVED",
               verifiedAt: null,
