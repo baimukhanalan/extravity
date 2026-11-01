@@ -17,7 +17,7 @@ export async function generateMetadata() {
 
 // A category is "thin" below this many live opportunities, and "stale" if the
 // newest one was added longer ago than this.
-const THIN_THRESHOLD = 3;
+const THIN_THRESHOLD = 10;
 const STALE_DAYS = 30;
 
 export default async function CoveragePage() {
