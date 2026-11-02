@@ -128,6 +128,23 @@ function isNearDuplicateTitle(title: string, publishedTitles: string[]): boolean
   });
 }
 
+function sharedTitleTokenCount(first: string, second: string): number {
+  const firstTokens = titleTokens(first);
+  const secondTokens = titleTokens(second);
+  return [...firstTokens].filter((token) => secondTokens.has(token)).length;
+}
+
+function sameDatedEvent(
+  first: { title: string; eventStartDate: Date | null },
+  second: { title: string; eventStartDate: Date | null },
+): boolean {
+  if (!first.eventStartDate || !second.eventStartDate) return false;
+  const close =
+    Math.abs(first.eventStartDate.getTime() - second.eventStartDate.getTime()) <=
+    36 * 60 * 60 * 1000;
+  return close && sharedTitleTokenCount(first.title, second.title) >= 3;
+}
+
 async function main() {
   const now = new Date();
   const cutoff = new Date(now.getTime() - 10 * 864e5);
@@ -259,7 +276,7 @@ async function main() {
         ],
       },
     },
-    select: { title: true },
+    select: { title: true, eventStartDate: true },
   });
   const releasedTitles = publishedCatalogRows.map(
     (published) => published.title,
@@ -284,6 +301,24 @@ async function main() {
     )
       continue;
     if (isNearDuplicateTitle(title, selectedTitles)) continue;
+    if (
+      publishedCatalogRows.some((published) =>
+        sameDatedEvent(
+          { title, eventStartDate: row.eventStartDate },
+          published,
+        ),
+      ) ||
+      selected.some((candidate) =>
+        sameDatedEvent(
+          { title, eventStartDate: row.eventStartDate },
+          {
+            title: releaseTitle(candidate) ?? candidate.title,
+            eventStartDate: candidate.eventStartDate,
+          },
+        ),
+      )
+    )
+      continue;
     if (
       !row.media.some((media) =>
         isOriginalTelegramPostMedia(row.sourceUrl, media),
