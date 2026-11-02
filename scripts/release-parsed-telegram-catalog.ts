@@ -77,6 +77,8 @@ function releaseTitle(row: {
     return "Бесплатный онлайн-кружок подготовки к ЕГЭ по математике — 2027";
   if (/symposium\.org\/competition/iu.test(text))
     return "St. Gallen Symposium Global Essay Competition 2027";
+  if (/chicagolatinofilmfestival\.org\/poster-contest/iu.test(text))
+    return "Конкурс дизайна плакатов Чикагского фестиваля латиноамериканского кино 2027";
   if (
     /(?:^|[^\p{L}\p{N}])(?:лотерея|casino|казино|ставки|betting|loto\s*\d)(?:[^\p{L}\p{N}]|$)/iu.test(
       text,
