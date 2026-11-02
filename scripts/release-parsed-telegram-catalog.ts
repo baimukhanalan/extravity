@@ -82,10 +82,31 @@ function titleTokens(title: string): Set<string> {
   );
 }
 
+function namedEntities(title: string): Set<string> {
+  const normalized = title
+    .toLocaleLowerCase("ru")
+    .replaceAll("ё", "е")
+    .replace(/[әғқңөұүһі]/g, (letter) =>
+      ({ ә: "а", ғ: "г", қ: "к", ң: "н", ө: "о", ұ: "у", ү: "у", һ: "х", і: "и" })[
+        letter
+      ] ?? letter,
+    );
+  return new Set(
+    [...normalized.matchAll(/[«“"]([^»”"]{4,80})[»”"]/g)]
+      .map((match) =>
+        match[1]?.replace(/[^\p{L}\p{N}]+/gu, " ").trim(),
+      )
+      .filter((value): value is string => Boolean(value && value.length >= 4)),
+  );
+}
+
 function isNearDuplicateTitle(title: string, publishedTitles: string[]): boolean {
+  const entities = namedEntities(title);
   const tokens = titleTokens(title);
-  if (tokens.size < 4) return false;
   return publishedTitles.some((publishedTitle) => {
+    const publishedEntities = namedEntities(publishedTitle);
+    if ([...entities].some((entity) => publishedEntities.has(entity))) return true;
+    if (tokens.size < 4) return false;
     const publishedTokens = titleTokens(publishedTitle);
     if (publishedTokens.size < 4) return false;
     const shared = [...tokens].filter((token) => publishedTokens.has(token)).length;
