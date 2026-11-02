@@ -49,6 +49,8 @@ function releaseTitle(row: {
     )
   )
     return null;
+  if (/^(?:помните|вы знали|did you know|remember)\b/i.test(row.title.trim()))
+    return null;
   const text = `${row.title}\n${row.shortDescription}\n${row.fullDescription}`;
   if (
     /^хакатон\s*[·•|:-]\s*онлайн$/i.test(row.title.trim()) &&
