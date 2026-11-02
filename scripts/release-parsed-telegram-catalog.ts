@@ -59,6 +59,12 @@ function releaseTitle(row: {
     return null;
   const text = `${row.title}\n${row.shortDescription}\n${row.fullDescription}`;
   if (
+    /(?:^|[^\p{L}\p{N}])(?:лотерея|casino|казино|ставки|betting|loto\s*\d)(?:[^\p{L}\p{N}]|$)/iu.test(
+      text,
+    )
+  )
+    return null;
+  if (
     /^хакатон\s*[·•|:-]\s*онлайн$/i.test(row.title.trim()) &&
     /\bCosmo\s+Hacks\s+2026\b/i.test(text)
   )
