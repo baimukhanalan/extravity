@@ -55,7 +55,7 @@ function releaseTitle(row: {
     )
   )
     return null;
-  if (/^(?:and bring it|our program+m?)(?:\s|[?!,:.-]|$)/i.test(row.title.trim()))
+  if (/^(?:and bring it|our program+m?)(?:[^\p{L}\p{N}]|$)/iu.test(row.title.trim()))
     return null;
   const text = `${row.title}\n${row.shortDescription}\n${row.fullDescription}`;
   if (
