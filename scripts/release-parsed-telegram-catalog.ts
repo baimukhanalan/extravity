@@ -237,30 +237,32 @@ async function main() {
     if (publishedAt) publishedByOpportunity.set(raw.opportunityId, publishedAt);
   }
   const recentPostCutoff = new Date(now.getTime() - 30 * 864e5);
-  const selected = rows.filter((row) => {
-    if (!releaseTitle(row)) return false;
+  const selected: typeof rows = [];
+  const selectedTitles = [...releasedTitles];
+  const selectedApplicationUrls = new Set(releasedApplicationUrls);
+  for (const row of rows) {
+    const title = releaseTitle(row);
+    if (!title) continue;
     if (
       row.applicationUrl &&
-      releasedApplicationUrls.has(row.applicationUrl)
+      selectedApplicationUrls.has(row.applicationUrl)
     )
-      return false;
-    if (
-      isNearDuplicateTitle(
-        releaseTitle(row) ?? row.title,
-        releasedTitles,
-      )
-    )
-      return false;
+      continue;
+    if (isNearDuplicateTitle(title, selectedTitles)) continue;
     if (
       !row.media.some((media) =>
         isOriginalTelegramPostMedia(row.sourceUrl, media),
       )
     )
-      return false;
-    if (row.applicationDeadline || row.eventStartDate) return true;
-    const publishedAt = publishedByOpportunity.get(row.id);
-    return Boolean(publishedAt && publishedAt >= recentPostCutoff);
-  });
+      continue;
+    if (!row.applicationDeadline && !row.eventStartDate) {
+      const publishedAt = publishedByOpportunity.get(row.id);
+      if (!publishedAt || publishedAt < recentPostCutoff) continue;
+    }
+    selected.push(row);
+    selectedTitles.push(title);
+    if (row.applicationUrl) selectedApplicationUrls.add(row.applicationUrl);
+  }
 
   if (!apply) {
     console.log(
