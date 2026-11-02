@@ -49,7 +49,13 @@ function releaseTitle(row: {
     )
   )
     return null;
-  if (/^(?:помните|вы знали|did you know|remember)\b/i.test(row.title.trim()))
+  if (
+    /^(?:помните|вы знали|did you know|remember)(?:\s|[?!,:.-]|$)/iu.test(
+      row.title.trim(),
+    )
+  )
+    return null;
+  if (/^(?:and bring it|our program+m?)(?:\s|[?!,:.-]|$)/i.test(row.title.trim()))
     return null;
   const text = `${row.title}\n${row.shortDescription}\n${row.fullDescription}`;
   if (
