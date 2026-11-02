@@ -67,6 +67,16 @@ function releaseTitle(row: {
     return "FLEX — приём заявок для школьников Казахстана";
   if (/(?:#япрофессионал|yandex\.ru\/profi)/iu.test(text))
     return "X сезон Всероссийской олимпиады «Я — профессионал»";
+  if (/nlogn\.info\/georgia-summer/iu.test(text))
+    return "Летняя смена «NlogN на море» в Грузии — 2027";
+  if (
+    /(?:онлайн-кружок|онлайн кружок)[\s\S]{0,160}(?:егэ|математик)/iu.test(
+      text,
+    )
+  )
+    return "Бесплатный онлайн-кружок подготовки к ЕГЭ по математике — 2027";
+  if (/symposium\.org\/competition/iu.test(text))
+    return "St. Gallen Symposium Global Essay Competition 2027";
   if (
     /(?:^|[^\p{L}\p{N}])(?:лотерея|casino|казино|ставки|betting|loto\s*\d)(?:[^\p{L}\p{N}]|$)/iu.test(
       text,
