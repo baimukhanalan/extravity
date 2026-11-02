@@ -57,6 +57,8 @@ function releaseTitle(row: {
     return null;
   if (/^(?:and bring it|our program+m?)(?:[^\p{L}\p{N}]|$)/iu.test(row.title.trim()))
     return null;
+  if (/^конкурс\s+[\p{L}\p{N}]{1,2}\s*[»"'’.!?-]*$/iu.test(row.title.trim()))
+    return null;
   const text = `${row.title}\n${row.shortDescription}\n${row.fullDescription}`;
   if (
     /(?:^|[^\p{L}\p{N}])(?:лотерея|casino|казино|ставки|betting|loto\s*\d)(?:[^\p{L}\p{N}]|$)/iu.test(
