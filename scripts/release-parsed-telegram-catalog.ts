@@ -61,6 +61,13 @@ function releaseTitle(row: {
     return null;
   const text = `${row.title}\n${row.shortDescription}\n${row.fullDescription}`;
   if (
+    /^начался прием заявок\.?$/iu.test(row.title.trim()) &&
+    /(?:americancouncils|brand=flexglobal|\bflex\b)/iu.test(text)
+  )
+    return "FLEX — приём заявок для школьников Казахстана";
+  if (/(?:#япрофессионал|yandex\.ru\/profi)/iu.test(text))
+    return "X сезон Всероссийской олимпиады «Я — профессионал»";
+  if (
     /(?:^|[^\p{L}\p{N}])(?:лотерея|casino|казино|ставки|betting|loto\s*\d)(?:[^\p{L}\p{N}]|$)/iu.test(
       text,
     )
