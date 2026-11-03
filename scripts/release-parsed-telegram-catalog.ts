@@ -42,13 +42,6 @@ function isDurablePublicMedia(media: { storageKey: string | null }): boolean {
   return media.storageKey?.startsWith("telegram-archive:v1:") === true;
 }
 
-function sourcePublishedAt(value: Prisma.JsonValue): Date | null {
-  const raw = objectValue(value).sourcePublishedAt;
-  if (typeof raw !== "string") return null;
-  const parsed = new Date(raw);
-  return Number.isFinite(parsed.getTime()) ? parsed : null;
-}
-
 function releaseTitle(row: {
   title: string;
   shortDescription: string;
@@ -70,6 +63,7 @@ function releaseTitle(row: {
     return null;
   if (/^конкурс\s+[\p{L}\p{N}]{1,2}\s*[»"'’.!?-]*$/iu.test(row.title.trim()))
     return null;
+  if (/им\.$/iu.test(row.title.trim())) return null;
   const text = `${row.title}\n${row.shortDescription}\n${row.fullDescription}`;
   if (
     /^начался прием заявок\.?$/iu.test(row.title.trim()) &&
@@ -179,7 +173,6 @@ function sameDatedEvent(
 
 async function main() {
   const now = new Date();
-  const cutoff = new Date(now.getTime() - 10 * 864e5);
   const apply = process.argv.includes("--apply");
   const category = requestedCategory();
   const ids = requestedIds();
@@ -189,13 +182,8 @@ async function main() {
     sourceType: { in: ["telegram", "telegram_forward"] },
     sourceUrl: { startsWith: "https://t.me/" },
     moderationStatus: "PENDING",
+    applicationDeadline: { gt: now },
     AND: [
-      {
-        OR: [
-          { applicationDeadline: null },
-          { applicationDeadline: { gt: cutoff } },
-        ],
-      },
       {
         OR: [
           { eventStartDate: null },
@@ -211,10 +199,11 @@ async function main() {
   const limit = requestedLimit();
   const exactIds: string[] = [];
   let cursor: string | undefined;
-  while (exactIds.length < limit) {
+  const pageSize = 250;
+  while (true) {
     const page = await db.opportunity.findMany({
       where,
-      take: Math.min(500, Math.max(50, (limit - exactIds.length) * 2)),
+      take: pageSize,
       ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
       orderBy: { id: "asc" },
       select: {
@@ -243,13 +232,9 @@ async function main() {
         )
       )
         exactIds.push(row.id);
-      if (exactIds.length >= limit) break;
     }
     cursor = page.at(-1)?.id;
-    if (
-      page.length < Math.min(500, Math.max(50, (limit - exactIds.length) * 2))
-    )
-      break;
+    if (page.length < pageSize) break;
   }
   const rows = await db.opportunity.findMany({
     where: { id: { in: exactIds } },
@@ -259,11 +244,6 @@ async function main() {
       media: { where: publicSourceMediaWhere, orderBy: { position: "asc" } },
     },
     orderBy: { id: "asc" },
-  });
-  const rawItems = await db.rawSourceItem.findMany({
-    where: { opportunityId: { in: rows.map((row) => row.id) } },
-    orderBy: { createdAt: "desc" },
-    select: { opportunityId: true, extracted: true },
   });
   const candidateApplicationUrls = rows
     .map((row) => row.applicationUrl)
@@ -315,18 +295,13 @@ async function main() {
   const releasedTitles = publishedCatalogRows.map(
     (published) => published.title,
   );
-  const publishedByOpportunity = new Map<string, Date>();
-  for (const raw of rawItems) {
-    if (!raw.opportunityId || publishedByOpportunity.has(raw.opportunityId))
-      continue;
-    const publishedAt = sourcePublishedAt(raw.extracted);
-    if (publishedAt) publishedByOpportunity.set(raw.opportunityId, publishedAt);
-  }
-  const recentPostCutoff = new Date(now.getTime() - 30 * 864e5);
   const selected: typeof rows = [];
   const selectedTitles = [...releasedTitles];
   const selectedApplicationUrls = new Set(releasedApplicationUrls);
+  let evaluatedSafetyRows = 0;
   for (const row of rows) {
+    if (selected.length >= limit) break;
+    evaluatedSafetyRows += 1;
     const title = releaseTitle(row);
     if (!title) continue;
     if (
@@ -359,10 +334,6 @@ async function main() {
       )
     )
       continue;
-    if (!row.applicationDeadline && !row.eventStartDate) {
-      const publishedAt = publishedByOpportunity.get(row.id);
-      if (!publishedAt || publishedAt < recentPostCutoff) continue;
-    }
     selected.push(row);
     selectedTitles.push(title);
     if (row.applicationUrl) selectedApplicationUrls.add(row.applicationUrl);
@@ -375,8 +346,10 @@ async function main() {
           mode: "plan",
           category: category ?? "all",
           candidates: candidateCount,
+          scannedExactMedia: rows.length,
           selectedExactMedia: selected.length,
-          excludedBySafetyChecks: rows.length - selected.length,
+          excludedBySafetyChecks: evaluatedSafetyRows - selected.length,
+          deferredExactMedia: rows.length - evaluatedSafetyRows,
           selection: selected.map((row) => ({
             id: row.id,
             slug: row.slug,
