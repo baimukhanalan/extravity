@@ -3,6 +3,7 @@ import {
   publicSourceMediaWhere,
   isOriginalTelegramPostMedia,
 } from "../lib/source-media-provenance";
+import { parsedTelegramReleaseBlockers } from "../lib/parsed-telegram-release-gate";
 
 const db = new PrismaClient();
 const warning = "Условия уточняйте у организатора.";
@@ -299,9 +300,22 @@ async function main() {
   const selectedTitles = [...releasedTitles];
   const selectedApplicationUrls = new Set(releasedApplicationUrls);
   let evaluatedSafetyRows = 0;
+  const termBlockers: Record<string, number> = {};
   for (const row of rows) {
     if (selected.length >= limit) break;
     evaluatedSafetyRows += 1;
+    const blockers = parsedTelegramReleaseBlockers({
+      applicationUrl: row.applicationUrl,
+      country: row.country,
+      tags: row.tags,
+      provenance: row.provenance?.adminOnlyJson,
+    });
+    if (blockers.length > 0) {
+      for (const blocker of blockers) {
+        termBlockers[blocker] = (termBlockers[blocker] ?? 0) + 1;
+      }
+      continue;
+    }
     const title = releaseTitle(row);
     if (!title) continue;
     if (
@@ -349,6 +363,7 @@ async function main() {
           scannedExactMedia: rows.length,
           selectedExactMedia: selected.length,
           excludedBySafetyChecks: evaluatedSafetyRows - selected.length,
+          termBlockers,
           deferredExactMedia: rows.length - evaluatedSafetyRows,
           selection: selected.map((row) => ({
             id: row.id,
@@ -385,6 +400,27 @@ async function main() {
       async (tx) => {
         const transactionItems: typeof releasedItems = [];
         for (const row of batch) {
+          const currentRow = await tx.opportunity.findUnique({
+            where: { id: row.id },
+            select: {
+              applicationUrl: true,
+              applicationDeadline: true,
+              country: true,
+              tags: true,
+              eventStartDate: true,
+              provenance: { select: { adminOnlyJson: true } },
+            },
+          });
+          if (!currentRow ||
+              !currentRow.applicationDeadline ||
+              currentRow.applicationDeadline <= new Date() ||
+              (currentRow.eventStartDate && currentRow.eventStartDate <= new Date()) ||
+              parsedTelegramReleaseBlockers({
+                applicationUrl: currentRow.applicationUrl,
+                country: currentRow.country,
+                tags: currentRow.tags,
+                provenance: currentRow.provenance?.adminOnlyJson,
+              }).length > 0) continue;
           const durableMediaCount = await tx.opportunityMedia.count({
             where: {
               opportunityId: row.id,
