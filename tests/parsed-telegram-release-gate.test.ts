@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parsedTelegramReleaseBlockers } from "../lib/parsed-telegram-release-gate";
+import { isOfficiallyReviewedTelegramRelease, parsedTelegramReleaseBlockers } from "../lib/parsed-telegram-release-gate";
 
 const reviewed = {
   applicationUrl: "https://example.org/register",
@@ -40,5 +40,41 @@ describe("parsed Telegram release terms", () => {
     });
     expect(blockers).toContain("school_audience_unverified");
     expect(blockers).toContain("direct_application_url_missing");
+  });
+});
+
+describe("officially reviewed Telegram release marker", () => {
+  const evidence = {
+    verifiedAt: new Date("2020-01-01T00:00:00.000Z"),
+    organizerVerified: "VERIFIED",
+    provenance: {
+      publicListingMode: "officially_reviewed",
+      reviewedAt: "2020-01-01T00:00:00.000Z",
+      officialPage: "https://organizer.example.org/event",
+      organizerOfficialEvidence: "https://organizer.example.org/event",
+      priceEvidenceUrl: "https://organizer.example.org/event",
+      priceEvidenceText: "19,000 KZT",
+      deadlineEvidence: "Original post and organizer page",
+      countryEvidence: "Organizer page",
+      audienceStatus: "SCHOOL",
+      organizerEvidence: "SOURCE_TEXT",
+      ingestUnknownTerms: [],
+    },
+  };
+
+  it("preserves a manually reviewed listing with explicit official evidence", () => {
+    expect(isOfficiallyReviewedTelegramRelease(evidence)).toBe(true);
+  });
+
+  it("keeps parsed cards unverified when the explicit marker or evidence is missing", () => {
+    expect(isOfficiallyReviewedTelegramRelease({
+      ...evidence, provenance: { ...evidence.provenance, publicListingMode: "parsed_unverified" },
+    })).toBe(false);
+    expect(isOfficiallyReviewedTelegramRelease({
+      ...evidence, provenance: { ...evidence.provenance, priceEvidenceText: "" },
+    })).toBe(false);
+    expect(isOfficiallyReviewedTelegramRelease({
+      ...evidence, provenance: { ...evidence.provenance, ingestUnknownTerms: ["country"] },
+    })).toBe(false);
   });
 });

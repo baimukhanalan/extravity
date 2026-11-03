@@ -103,8 +103,10 @@ async function checkCandidate(client: Prisma.TransactionClient | PrismaClient) {
     maximumTeamSize: 3,
     price: reviewed.price,
     currency: "KZT",
-    eventStartDate: new Date("2026-11-27T19:00:00.000Z"),
-    eventEndDate: new Date("2026-11-29T18:59:00.000Z"),
+    // The public date formatter renders UTC calendar dates, and the source
+    // publishes dates without an event start hour.
+    eventStartDate: new Date("2026-11-28T12:00:00.000Z"),
+    eventEndDate: new Date("2026-11-29T12:00:00.000Z"),
     requirements: ["Школьники 8–12 классов", "Команда из 3 участников", "Дебаты на английском языке"],
     applicationMethod: "external",
     directApplySupported: false,
@@ -172,6 +174,9 @@ async function main() {
         deadlineEvidence: `${reviewed.sourceUrl}: 20 November 2026; ${reviewed.officialPage}: 22 November 2026; earlier date selected`,
         officialPage: reviewed.officialPage,
         reviewedAt: now.toISOString(),
+        publicListingMode: "officially_reviewed",
+        publicNotice: null,
+        applicationDisabled: false,
       } as Prisma.InputJsonValue },
     });
     await tx.auditLog.create({ data: {

@@ -3,7 +3,7 @@ import {
   publicSourceMediaWhere,
   isOriginalTelegramPostMedia,
 } from "../lib/source-media-provenance";
-import { parsedTelegramReleaseBlockers } from "../lib/parsed-telegram-release-gate";
+import { isOfficiallyReviewedTelegramRelease, parsedTelegramReleaseBlockers } from "../lib/parsed-telegram-release-gate";
 
 const db = new PrismaClient();
 const warning = "Условия уточняйте у организатора.";
@@ -408,6 +408,8 @@ async function main() {
               country: true,
               tags: true,
               eventStartDate: true,
+              verifiedAt: true,
+              organizerVerified: true,
               provenance: { select: { adminOnlyJson: true } },
             },
           });
@@ -430,6 +432,11 @@ async function main() {
           });
           if (durableMediaCount !== row.media.length || durableMediaCount === 0)
             continue;
+          const officiallyReviewed = isOfficiallyReviewedTelegramRelease({
+            verifiedAt: currentRow.verifiedAt,
+            organizerVerified: currentRow.organizerVerified,
+            provenance: currentRow.provenance?.adminOnlyJson,
+          });
           const deadline = row.applicationDeadline;
           const nextStatus =
             deadline && deadline <= now ? "CLOSED" : "PUBLISHED";
@@ -447,7 +454,7 @@ async function main() {
               title: releaseTitle(row) ?? row.title,
               status: nextStatus,
               moderationStatus: "APPROVED",
-              verifiedAt: null,
+              verifiedAt: officiallyReviewed ? currentRow.verifiedAt : null,
               lastCheckedAt: now,
               directApplySupported: false,
               assistedApplySupported: false,
@@ -462,10 +469,10 @@ async function main() {
             data: {
               adminOnlyJson: {
                 ...current,
-                publicListingMode: "parsed_unverified",
+                publicListingMode: officiallyReviewed ? "officially_reviewed" : "parsed_unverified",
                 publicListingAt: now.toISOString(),
                 applicationDisabled: false,
-                publicNotice: warning,
+                publicNotice: officiallyReviewed ? null : warning,
               } as Prisma.InputJsonValue,
             },
           });
