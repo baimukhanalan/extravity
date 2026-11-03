@@ -27,6 +27,17 @@ function requestedCategory(): string | undefined {
   return value || undefined;
 }
 
+function requestedIds(): string[] | undefined {
+  const arg = process.argv.find((value) => value.startsWith("--ids="));
+  if (!arg) return undefined;
+  const ids = [...new Set(arg.slice("--ids=".length).split(",").map((value) => value.trim()).filter(Boolean))];
+  if (ids.length === 0 || ids.length > 500) throw new Error("--ids must contain between 1 and 500 IDs");
+  if (ids.some((id) => !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id))) {
+    throw new Error("--ids contains an invalid opportunity ID");
+  }
+  return ids;
+}
+
 function isDurablePublicMedia(media: { storageKey: string | null }): boolean {
   return media.storageKey?.startsWith("telegram-archive:v1:") === true;
 }
@@ -171,7 +182,9 @@ async function main() {
   const cutoff = new Date(now.getTime() - 10 * 864e5);
   const apply = process.argv.includes("--apply");
   const category = requestedCategory();
+  const ids = requestedIds();
   const where: Prisma.OpportunityWhereInput = {
+    ...(ids ? { id: { in: ids } } : {}),
     deletedAt: null,
     sourceType: { in: ["telegram", "telegram_forward"] },
     sourceUrl: { startsWith: "https://t.me/" },
@@ -364,7 +377,7 @@ async function main() {
           candidates: candidateCount,
           selectedExactMedia: selected.length,
           excludedBySafetyChecks: rows.length - selected.length,
-          selection: selected.slice(0, 100).map((row) => ({
+          selection: selected.map((row) => ({
             id: row.id,
             slug: row.slug,
             title: releaseTitle(row),
@@ -373,7 +386,7 @@ async function main() {
             eventStartDate: row.eventStartDate,
             sourceUrl: row.sourceUrl,
           })),
-          selectionTruncated: selected.length > 100,
+          selectionTruncated: false,
         },
         null,
         2,
@@ -383,6 +396,11 @@ async function main() {
   }
 
   let released = 0;
+  const releasedItems: Array<{
+    id: string;
+    slug: string;
+    mediaUrl: string;
+  }> = [];
   const transactionBatchSize = 20;
   for (
     let offset = 0;
@@ -390,9 +408,9 @@ async function main() {
     offset += transactionBatchSize
   ) {
     const batch = selected.slice(offset, offset + transactionBatchSize);
-    released += await db.$transaction(
+    const batchItems = await db.$transaction(
       async (tx) => {
-        let batchReleased = 0;
+        const transactionItems: typeof releasedItems = [];
         for (const row of batch) {
           const durableMediaCount = await tx.opportunityMedia.count({
             where: {
@@ -454,17 +472,29 @@ async function main() {
               },
             },
           });
-          batchReleased += 1;
+          transactionItems.push({
+            id: row.id,
+            slug: row.slug,
+            mediaUrl: row.media[0]!.url,
+          });
         }
-        return batchReleased;
+        return transactionItems;
       },
       { maxWait: 60_000, timeout: 120_000 },
     );
+    released += batchItems.length;
+    releasedItems.push(...batchItems);
   }
 
   console.log(
     JSON.stringify(
-      { mode: "apply", category: category ?? "all", selected: selected.length, released },
+      {
+        mode: "apply",
+        category: category ?? "all",
+        selected: selected.length,
+        released,
+        releasedItems,
+      },
       null,
       2,
     ),

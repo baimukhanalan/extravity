@@ -1,6 +1,8 @@
 name: Release verified Telegram catalog candidates
 
 on:
+  schedule:
+    - cron: "*/10 * * * *"
   workflow_dispatch:
     inputs:
       category:
@@ -32,9 +34,10 @@ jobs:
     timeout-minutes: 10
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL_UNPOOLED }}
-      CATEGORY: ${{ inputs.category }}
-      LIMIT: ${{ inputs.limit }}
-      APPLY: ${{ inputs.apply }}
+      CATEGORY: ${{ github.event_name == 'workflow_dispatch' && inputs.category || 'all' }}
+      LIMIT: ${{ github.event_name == 'workflow_dispatch' && inputs.limit || '100' }}
+      APPLY: ${{ github.event_name == 'schedule' || inputs.apply }}
+      APP_ORIGIN: https://extravity.vercel.app
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -43,7 +46,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx prisma generate
-      - name: Validate inputs and release catalog candidates
+      - name: Plan an immutable release snapshot
+        id: plan
         run: |
           set -euo pipefail
           test -n "$DATABASE_URL"
@@ -55,8 +59,63 @@ jobs:
           if [[ "$CATEGORY" != "all" ]]; then
             args+=("--category=$CATEGORY")
           fi
-          if [[ "$APPLY" == "true" ]]; then
-            args+=("--apply")
-          fi
+          npx tsx scripts/release-parsed-telegram-catalog.ts "${args[@]}" | tee release-plan.json
+          jq -e '.mode == "plan" and (.selectionTruncated == false)' release-plan.json >/dev/null
 
-          npx tsx scripts/release-parsed-telegram-catalog.ts "${args[@]}"
+          count="$(jq -r '.selectedExactMedia' release-plan.json)"
+          ids="$(jq -r '[.selection[].id] | join(",")' release-plan.json)"
+          [[ "$count" =~ ^[0-9]+$ ]]
+          if (( count > 0 )); then
+            test -n "$ids"
+            [[ "$(awk -F, '{ print NF }' <<<"$ids")" -eq "$count" ]]
+          fi
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          echo "ids=$ids" >> "$GITHUB_OUTPUT"
+
+      - name: Publish only the reviewed snapshot
+        if: env.APPLY == 'true' && steps.plan.outputs.count != '0'
+        run: |
+          set -euo pipefail
+          args=("--limit=$LIMIT" "--apply" "--ids=${{ steps.plan.outputs.ids }}")
+          if [[ "$CATEGORY" != "all" ]]; then
+            args+=("--category=$CATEGORY")
+          fi
+          npx tsx scripts/release-parsed-telegram-catalog.ts "${args[@]}" | tee release-result.json
+          jq -e '
+            .mode == "apply"
+            and (.released == .selected)
+            and (.released == (.releasedItems | length))
+          ' release-result.json >/dev/null
+
+      - name: Verify every released page and source media
+        if: env.APPLY == 'true' && steps.plan.outputs.count != '0'
+        run: |
+          set -euo pipefail
+          while IFS= read -r item; do
+            slug="$(jq -r '.slug' <<<"$item")"
+            media_url="$(jq -r '.mediaUrl' <<<"$item")"
+            [[ "$slug" =~ ^[a-z0-9-]+$ ]]
+            [[ "$media_url" == "$APP_ORIGIN/api/telegram-media/"* ]]
+            curl --fail --show-error --silent --location --retry 3 --max-time 45 \
+              --output /dev/null "$APP_ORIGIN/opportunities/$slug"
+            curl --fail --show-error --silent --location --retry 3 --max-time 45 \
+              --output /dev/null "$media_url"
+          done < <(jq -c '.releasedItems[]' release-result.json)
+
+          released="$(jq -r '.released' release-result.json)"
+          echo "Published and verified $released Telegram catalog cards." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Report an empty queue
+        if: steps.plan.outputs.count == '0'
+        run: echo "No new eligible Telegram cards were waiting for release." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Preserve sanitized release evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: telegram-catalog-release-${{ github.run_id }}
+          path: |
+            release-plan.json
+            release-result.json
+          if-no-files-found: ignore
+          retention-days: 7
