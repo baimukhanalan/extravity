@@ -1,5 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { publicationGate } from "@/lib/opportunity-publication";
+import { parsedTelegramReleaseBlockers } from "@/lib/parsed-telegram-release-gate";
 import { isOriginalTelegramPostMedia } from "@/lib/source-media-provenance";
 
 // One evidence-bound correction. This script leaves the card pending; the
@@ -117,6 +118,18 @@ async function checkCandidate(client: Prisma.TransactionClient | PrismaClient) {
     ingestUnknownTerms: [], duplicateReviewRequired: false,
   });
   if (!gate.allowed) throw new Error(`Publication gate: ${gate.reasons.join(", ")}`);
+  const releaseBlockers = parsedTelegramReleaseBlockers({
+    applicationUrl: corrected.applicationUrl,
+    country: corrected.country,
+    tags: item.tags,
+    provenance: {
+      audienceStatus: "SCHOOL",
+      audienceEvidence: "Telegram post and official page: school grades 8–12",
+      organizerEvidence: "SOURCE_TEXT",
+      ingestUnknownTerms: [],
+    },
+  });
+  if (releaseBlockers.length) throw new Error(`Release gate: ${releaseBlockers.join(", ")}`);
   return { item, corrected };
 }
 
@@ -150,7 +163,8 @@ async function main() {
         ...(original as Record<string, unknown>),
         audienceStatus: "SCHOOL",
         audienceEvidence: "Telegram post and official page: school grades 8–12",
-        organizerEvidence: reviewed.officialPage,
+        organizerEvidence: "SOURCE_TEXT",
+        organizerOfficialEvidence: reviewed.officialPage,
         ingestUnknownTerms: [],
         countryEvidence: `${reviewed.sourceUrl}: schools across Kazakhstan; ${reviewed.officialPage}: Almaty venue`,
         priceEvidenceUrl: reviewed.officialPage,
