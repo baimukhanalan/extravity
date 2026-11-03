@@ -5,6 +5,12 @@ type ReleaseCandidate = {
   provenance: unknown;
 };
 
+type ReviewedReleaseCandidate = {
+  verifiedAt: Date | null;
+  organizerVerified: string;
+  provenance: unknown;
+};
+
 const indirectHosts = new Set([
   "t.me",
   "telegram.me",
@@ -29,6 +35,34 @@ function directApplicationUrl(value: string | null): boolean {
   } catch {
     return false;
   }
+}
+
+/** Only an explicit, evidence-bound manual review may use the verified card flow. */
+export function isOfficiallyReviewedTelegramRelease(candidate: ReviewedReleaseCandidate): boolean {
+  const provenance = record(candidate.provenance);
+  const officialPage = provenance.officialPage;
+  const reviewedAt = provenance.reviewedAt;
+  return candidate.verifiedAt instanceof Date
+    && !Number.isNaN(candidate.verifiedAt.getTime())
+    && candidate.organizerVerified === "VERIFIED"
+    && provenance.publicListingMode === "officially_reviewed"
+    && typeof reviewedAt === "string"
+    && Number.isFinite(Date.parse(reviewedAt))
+    && Date.parse(reviewedAt) <= Date.now()
+    && typeof officialPage === "string"
+    && directApplicationUrl(officialPage)
+    && provenance.organizerOfficialEvidence === officialPage
+    && provenance.priceEvidenceUrl === officialPage
+    && typeof provenance.priceEvidenceText === "string"
+    && Boolean(provenance.priceEvidenceText.trim())
+    && typeof provenance.deadlineEvidence === "string"
+    && Boolean(provenance.deadlineEvidence.trim())
+    && typeof provenance.countryEvidence === "string"
+    && Boolean(provenance.countryEvidence.trim())
+    && provenance.audienceStatus === "SCHOOL"
+    && provenance.organizerEvidence === "SOURCE_TEXT"
+    && Array.isArray(provenance.ingestUnknownTerms)
+    && provenance.ingestUnknownTerms.length === 0;
 }
 
 /** Parsed rows need explicit source terms before a reviewed release can publish them. */
