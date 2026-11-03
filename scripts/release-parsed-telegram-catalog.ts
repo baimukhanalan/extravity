@@ -211,10 +211,11 @@ async function main() {
   const limit = requestedLimit();
   const exactIds: string[] = [];
   let cursor: string | undefined;
-  while (exactIds.length < limit) {
+  const pageSize = 250;
+  while (true) {
     const page = await db.opportunity.findMany({
       where,
-      take: Math.min(500, Math.max(50, (limit - exactIds.length) * 2)),
+      take: pageSize,
       ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
       orderBy: { id: "asc" },
       select: {
@@ -243,13 +244,9 @@ async function main() {
         )
       )
         exactIds.push(row.id);
-      if (exactIds.length >= limit) break;
     }
     cursor = page.at(-1)?.id;
-    if (
-      page.length < Math.min(500, Math.max(50, (limit - exactIds.length) * 2))
-    )
-      break;
+    if (page.length < pageSize) break;
   }
   const rows = await db.opportunity.findMany({
     where: { id: { in: exactIds } },
@@ -326,7 +323,10 @@ async function main() {
   const selected: typeof rows = [];
   const selectedTitles = [...releasedTitles];
   const selectedApplicationUrls = new Set(releasedApplicationUrls);
+  let evaluatedSafetyRows = 0;
   for (const row of rows) {
+    if (selected.length >= limit) break;
+    evaluatedSafetyRows += 1;
     const title = releaseTitle(row);
     if (!title) continue;
     if (
@@ -375,8 +375,10 @@ async function main() {
           mode: "plan",
           category: category ?? "all",
           candidates: candidateCount,
+          scannedExactMedia: rows.length,
           selectedExactMedia: selected.length,
-          excludedBySafetyChecks: rows.length - selected.length,
+          excludedBySafetyChecks: evaluatedSafetyRows - selected.length,
+          deferredExactMedia: rows.length - evaluatedSafetyRows,
           selection: selected.map((row) => ({
             id: row.id,
             slug: row.slug,
