@@ -15,6 +15,11 @@ on:
         required: true
         default: "100"
         type: string
+      ids:
+        description: Optional comma-separated opportunity IDs for a canary
+        required: false
+        default: ""
+        type: string
       apply:
         description: Publish selected candidates
         required: true
@@ -36,6 +41,7 @@ jobs:
       DATABASE_URL: ${{ secrets.DATABASE_URL_UNPOOLED }}
       CATEGORY: ${{ github.event_name == 'workflow_dispatch' && inputs.category || 'all' }}
       LIMIT: ${{ github.event_name == 'workflow_dispatch' && inputs.limit || '100' }}
+      IDS: ${{ github.event_name == 'workflow_dispatch' && inputs.ids || '' }}
       APPLY: ${{ github.event_name == 'schedule' || inputs.apply }}
       APP_ORIGIN: https://extravity.vercel.app
     steps:
@@ -56,6 +62,9 @@ jobs:
           (( LIMIT >= 1 && LIMIT <= 500 ))
 
           args=("--limit=$LIMIT")
+          if [[ -n "$IDS" ]]; then
+            args+=("--ids=$IDS")
+          fi
           if [[ "$CATEGORY" != "all" ]]; then
             args+=("--category=$CATEGORY")
           fi
