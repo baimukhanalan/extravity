@@ -56,4 +56,21 @@ describe("parser telegram state", () => {
   it("rejects numeric values so large fingerprints keep exact precision", async () => {
     expect((await PUT(request("PUT", { state: { channel: 42 } }))).status).toBe(422);
   });
+
+  it("accepts the expected revision fingerprint capacity without losing the saved state", async () => {
+    const state = Object.fromEntries(Array.from({ length: 15_600 }, (_, index) => [`__revision__:channel:${index}`, "1"]));
+    mocks.findFirst.mockResolvedValue({ id: "state-id", extracted: state });
+    mocks.update.mockResolvedValue({ id: "state-id" });
+
+    expect((await PUT(request("PUT", { state }))).status).toBe(200);
+    const response = await GET(request("GET"));
+    expect(response.status).toBe(200);
+    expect(Object.keys((await response.json()).state)).toHaveLength(15_600);
+  });
+
+  it("rejects state beyond the bounded capacity", async () => {
+    const state = Object.fromEntries(Array.from({ length: 20_001 }, (_, index) => [`channel_${index}`, "1"]));
+    expect((await PUT(request("PUT", { state }))).status).toBe(422);
+    expect(mocks.findFirst).not.toHaveBeenCalled();
+  });
 });
