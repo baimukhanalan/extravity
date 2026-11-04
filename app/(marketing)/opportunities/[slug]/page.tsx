@@ -26,7 +26,7 @@ import { getT } from "@/lib/locale";
 import { interpolate } from "@/lib/i18n";
 import { getOpportunityAvailability } from "@/lib/opportunity-availability";
 import { hasPublicCatalogApproval, isParsedPublicListing, publicOpportunityWhere, retainPublicCatalogOpportunities } from "@/lib/public-opportunity";
-import { isOriginalTelegramPostMedia, publicSourceMediaWhere } from "@/lib/source-media-provenance";
+import { isOriginalTelegramPostMedia, isPublicTelegramPostUrl, publicSourceMediaWhere } from "@/lib/source-media-provenance";
 import { opportunityMediaNotice } from "@/lib/opportunity-media-notice";
 import { retainOpportunitiesWithExactTelegramMedia } from "@/lib/exact-telegram-media";
 import styles from "./detail.module.css";
@@ -374,6 +374,11 @@ export default async function OpportunityPage({
               {applicationTarget ? (
                 <ButtonLink href={applicationTarget} target="_blank" rel="noopener noreferrer nofollow" variant="outline" className="w-full">
                   {parsedListing ? "Открыть объявление организатора" : "Подать у организатора"} <ArrowUpRight className="h-4 w-4" />
+                </ButtonLink>
+              ) : null}
+              {!parsedListing && opp.sourceUrl && isPublicTelegramPostUrl(opp.sourceUrl) ? (
+                <ButtonLink href={opp.sourceUrl} target="_blank" rel="noopener noreferrer nofollow" variant="ghost" className="w-full">
+                  {t.oppDetail.telegramSourcePost} <ArrowUpRight className="h-4 w-4" />
                 </ButtonLink>
               ) : null}
               {parsedApplicationFormTarget ? (
