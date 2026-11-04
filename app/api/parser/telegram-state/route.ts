@@ -6,10 +6,12 @@ import { safeEqual } from "@/lib/timing-safe";
 export const dynamic = "force-dynamic";
 
 const STATE_URL = "telegram-state://primary";
+// 236 channels may each retain up to 64 revision fingerprints, plus cursors.
+const MAX_STATE_ENTRIES = 20_000;
 const keySchema = z.string().min(1).max(300);
 const valueSchema = z.string().regex(/^\d{1,100}$/);
 const payloadSchema = z.object({
-  state: z.record(keySchema, valueSchema).refine((value) => Object.keys(value).length <= 10_000),
+  state: z.record(keySchema, valueSchema).refine((value) => Object.keys(value).length <= MAX_STATE_ENTRIES),
 });
 
 function authorized(req: NextRequest): boolean {
