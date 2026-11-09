@@ -1,5 +1,8 @@
-export function railwayMediaDisplayUrl(media: { url: string; storageKey?: string | null }, preview = false): string | null {
+import { isTrustedDirectArchiveMediaUrl } from "./direct-archive-media-url";
+
+export function railwayMediaDisplayUrl(media: { url: string; storageKey?: string | null; checksum?: string | null }, preview = false): string | null {
   if (media.storageKey?.startsWith("telegram-archive:v1:")) {
+    if (isTrustedDirectArchiveMediaUrl(media.url, media.checksum ?? "")) return media.url;
     try {
       const url = new URL(media.url);
       if (!/^\/api\/telegram-media\/[a-f0-9]{64}$/.test(url.pathname) || url.search || url.hash) return null;

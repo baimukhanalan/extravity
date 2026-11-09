@@ -46,11 +46,12 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Skip static assets and the image optimizer — they execute no scripts, and a
-  // per-request CSP on them only adds overhead.
+  // Only HTML pages need the per-request script nonce. API responses and static
+  // media have their own response headers; running Proxy on large binary routes
+  // adds an extra compute hop and Fast Origin Transfer without protecting HTML.
   matcher: [
     {
-      source: "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)",
+      source: "/((?!api(?:/|$)|_next/static|_next/image|images(?:/|$)|opportunity-covers(?:/|$)|source-media(?:/|$)|e2e-fixtures(?:/|$)|favicon.ico|robots.txt|sitemap.xml).*)",
       missing: [
         { type: "header", key: "next-router-prefetch" },
         { type: "header", key: "purpose", value: "prefetch" },
