@@ -25,6 +25,8 @@ const old = {
   TELEGRAM_MEDIA_ARCHIVE_ENABLED: process.env.TELEGRAM_MEDIA_ARCHIVE_ENABLED,
   TELEGRAM_MEDIA_BOT_TOKEN: process.env.TELEGRAM_MEDIA_BOT_TOKEN,
   TELEGRAM_MEDIA_ARCHIVE_CHAT_ID: process.env.TELEGRAM_MEDIA_ARCHIVE_CHAT_ID,
+  NEXT_PUBLIC_MEDIA_BASE_URL: process.env.NEXT_PUBLIC_MEDIA_BASE_URL,
+  MEDIA_DELIVERY_MODE: process.env.MEDIA_DELIVERY_MODE,
 };
 
 afterEach(() => {
@@ -152,5 +154,35 @@ describe("parser source media", () => {
     process.env.TELEGRAM_MEDIA_BOT_TOKEN = `123456:${"A".repeat(35)}`;
     process.env.TELEGRAM_MEDIA_ARCHIVE_CHAT_ID = "-1001234567890";
     expect(parserMediaCapability()).toEqual({ mediaConfigured: true, mediaBackend: "telegram_archive" });
+  });
+
+  it("allows only checksum-bound direct CDN media without routing images through Vercel", () => {
+    process.env.NEXT_PUBLIC_MEDIA_BASE_URL = "https://media.example.com";
+    const archived = {
+      url: `https://media.example.com/telegram/${checksum}.jpg`,
+      storageKey: `telegram-archive:v1:-1001234567890:42:${"A".repeat(40)}`,
+      checksum,
+    };
+    expect(isAllowedParserMedia(archived)).toBe(true);
+    expect(railwayMediaDisplayUrl(archived)).toBe(archived.url);
+    expect(railwayMediaDisplayUrl(archived, true)).toBe(archived.url);
+    process.env.MEDIA_DELIVERY_MODE = "direct_r2";
+    process.env.PARSER_INGEST_SECRET = secret;
+    process.env.NEXT_PUBLIC_APP_URL = appUrl;
+    expect(parserMediaCapability()).toEqual({
+      mediaConfigured: true, mediaBackend: "telegram_archive", mediaPublicBaseUrl: "https://media.example.com",
+    });
+    for (const url of [
+      `http://media.example.com/telegram/${checksum}.jpg`,
+      `https://media.example.com.evil.test/telegram/${checksum}.jpg`,
+      `https://media.example.com/telegram/${"b".repeat(64)}.jpg`,
+      `https://media.example.com/telegram/${checksum}.jpg?x=1`,
+      `https://media.example.com/other/${checksum}.jpg`,
+    ]) {
+      expect(isAllowedParserMedia({ ...archived, url })).toBe(false);
+      expect(railwayMediaDisplayUrl({ ...archived, url })).toBeNull();
+    }
+    delete process.env.NEXT_PUBLIC_MEDIA_BASE_URL;
+    expect(isAllowedParserMedia(archived)).toBe(false);
   });
 });

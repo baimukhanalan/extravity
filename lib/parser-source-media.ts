@@ -1,4 +1,5 @@
 import { createHmac } from "node:crypto";
+import { directArchiveMediaOrigin, isTrustedDirectArchiveMediaUrl } from "./direct-archive-media-url";
 
 const ASSET_ID = /^[a-f0-9]{64}$/;
 const SOURCE_MEDIA_PATH = /^\/api\/source-media\/([a-f0-9]{64})$/;
@@ -65,6 +66,7 @@ export function isTrustedTelegramArchiveCandidate(media: {
   checksum: string;
 }): boolean {
   if (!media.storageKey || !TELEGRAM_ARCHIVE_KEY.test(media.storageKey)) return false;
+  if (isTrustedDirectArchiveMediaUrl(media.url, media.checksum)) return true;
   try {
     const url = new URL(media.url);
     const assetId = TELEGRAM_MEDIA_PATH.exec(url.pathname)?.[1];
@@ -103,7 +105,12 @@ export function railwayMediaOrigin(): URL | null {
   }
 }
 
-export function parserMediaCapability(): { mediaConfigured: boolean; mediaBackend: "telegram_archive" | "railway_volume" | "vercel_blob" | "none" } {
+export function parserMediaCapability(): { mediaConfigured: boolean; mediaBackend: "telegram_archive" | "railway_volume" | "vercel_blob" | "none"; mediaPublicBaseUrl?: string } {
+  const directOrigin = directArchiveMediaOrigin();
+  if (process.env.MEDIA_DELIVERY_MODE === "direct_r2" && directOrigin && process.env.PARSER_INGEST_SECRET
+    && directOrigin !== appMediaOrigin()?.origin) {
+    return { mediaConfigured: true, mediaBackend: "telegram_archive", mediaPublicBaseUrl: directOrigin };
+  }
   if (process.env.TELEGRAM_MEDIA_ARCHIVE_ENABLED === "true"
     && process.env.TELEGRAM_MEDIA_BOT_TOKEN
     && process.env.TELEGRAM_MEDIA_ARCHIVE_CHAT_ID
